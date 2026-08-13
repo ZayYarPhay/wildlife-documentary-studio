@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 9 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing.
+Phase 10 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing using either manual editors or a resumable one-click workflow.
 
 ## Architecture
 
@@ -277,6 +277,33 @@ Subtitles are not permanently burned into source clips. The SRT path, subtitle s
 - `POST /api/projects/{project_id}/audio/assets`
 - `GET /api/timelines/{timeline_id}/subtitles.srt`
 
+## Phase 10 scope
+
+- Persistent `WorkflowRun` and ordered `WorkflowStep` state with attempts, diagnostics, progress and timestamps
+- AUTO and MANUAL modes over every currently implemented phase
+- Weighted overall progress from research through render-ready validation
+- Idempotent start: repeated clicks return the active run instead of duplicating jobs/assets
+- Existing approved research, scripts, scenes and selected media are reused
+- AUTO policy controls for approvals, media selection, AI-video generation and local-image stock fallback
+- MANUAL review pauses that preserve access to every existing editor
+- Clean `VOICE_WAITING` state; AUTO resumes after transcription while MANUAL waits for timing approval
+- Safe pause at step boundaries, resume, cancel and failed-step-only retry
+- Process-restart recovery: interrupted pending/running workflows become resumable paused runs
+- Current operation and generation-job visibility
+- Render-ready validation without starting the future final MP4 render
+- One-click pipeline panel with progress, step history, diagnostics and direct manual-editor navigation
+
+The default AUTO policy approves generated research and script versions, selects generated media, creates configured AI-video scenes and falls back from unavailable local stock to AI image motion. Disable AI-video generation for a cheaper image-motion workflow. AUTO never replaces an already selected local visual. MANUAL mode pauses at major review boundaries and leaves all existing tabs fully functional.
+
+### Workflow API
+
+- `GET /api/projects/{project_id}/workflow`
+- `POST /api/projects/{project_id}/workflow/start`
+- `POST /api/workflows/{run_id}/pause`
+- `POST /api/workflows/{run_id}/resume`
+- `POST /api/workflows/{run_id}/retry`
+- `POST /api/workflows/{run_id}/cancel`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Uploaded users must confirm that their audio license permits the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.
+Authentication, a distributed queue/GPU worker, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 10 uses FastAPI in-process background tasks; workflow state survives restart and can resume, but an interrupted provider call does not continue mid-call. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Users must confirm that uploaded audio licenses permit the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.

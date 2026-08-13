@@ -22,6 +22,8 @@ from app.db.base import (
     TimelineItem,
     TranscriptSegment,
     VoiceTrack,
+    WorkflowRun,
+    WorkflowStep,
 )
 from app.db.session import Base
 
@@ -43,6 +45,8 @@ _registered_models = (
     TimelineItem,
     TranscriptSegment,
     VoiceTrack,
+    WorkflowRun,
+    WorkflowStep,
 )
 
 config = context.config

@@ -143,8 +143,21 @@ textarea { width:100%; padding:13px 14px; background:white; border:1px solid var
 .toggle-row { display:flex; gap:24px; }
 .audio-upload { margin-top:20px; }.audio-upload .button { margin-top:16px; }
 .audio-library { margin-top:20px; }.audio-library>div { display:flex; align-items:center; gap:16px; margin-top:12px; }.audio-library audio { max-width:360px; }
+.workflow-panel { margin-top:24px; padding:24px; }
+.workflow-heading,.workflow-progress>div { display:flex; justify-content:space-between; align-items:start; gap:20px; }
+.workflow-heading h2 { margin:8px 0; }.workflow-heading p { margin-bottom:0; }
+.workflow-status { padding:8px 12px; border-radius:99px; background:#e7ebe5; font-size:12px; font-weight:800; white-space:nowrap; }
+.workflow-status.running,.workflow-status.pending { background:#dcebf2; color:#28536b; }.workflow-status.failed { background:#fde8e8; color:#8a2020; }.workflow-status.render_ready { background:#dcebd7; color:var(--green); }.workflow-status.voice_waiting,.workflow-status.paused { background:#fff0cc; color:#765606; }
+.workflow-launch { display:grid; grid-template-columns:220px 1fr 1fr auto; gap:16px; align-items:end; margin-top:20px; }
+.workflow-progress { margin-top:22px; }.workflow-progress span { display:block; color:var(--muted); margin-top:4px; }.workflow-progress progress { width:100%; height:12px; accent-color:var(--green); }
+.workflow-steps { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:18px; }
+.workflow-step { display:grid; grid-template-columns:28px 1fr; gap:8px; padding:10px; border:1px solid var(--line); border-radius:10px; color:var(--muted); }
+.workflow-step>span { width:26px; height:26px; display:grid; place-items:center; border-radius:50%; background:#e7ebe5; font-size:11px; font-weight:800; }.workflow-step strong,.workflow-step small,.workflow-step em { display:block; }.workflow-step strong { font-size:12px; color:var(--ink); }.workflow-step small { margin-top:4px; font-size:10px; line-height:1.35; }.workflow-step em { color:#8a2020; font-size:10px; margin-top:4px; }.workflow-step.completed { border-color:#8eae78; background:#f3f8f0; }.workflow-step.running { border-color:#6b9bb5; background:#f0f7fa; }.workflow-step.waiting { border-color:#d2aa51; background:#fff9e8; }.workflow-step.failed { border-color:#c56b6b; background:#fff4f4; }
+.workflow-actions { flex-wrap:wrap; }
 @media (max-width:700px) { .hero,.details,.section-heading,.media-scene-picker { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid,.scene-fields { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } .duration-bar,.script-toolbar { align-items:flex-start; flex-direction:column; } }
 @media (max-width:900px) { .image-workspace { grid-template-columns:1fr; } }
 @media (max-width:900px) { .voice-columns { grid-template-columns:1fr; } .voice-upload,.voice-summary,.voice-apply { align-items:stretch; flex-direction:column; } .voice-summary audio { width:100%; } }
 @media (max-width:800px) { .timeline-item { grid-template-columns:1fr; } .timeline-edit { grid-template-columns:1fr 1fr; } .timeline-track { grid-template-columns:1fr; } }
 @media (max-width:800px) { .audio-grid { grid-template-columns:1fr; } .audio-library>div { align-items:stretch; flex-direction:column; } }
+@media (max-width:1000px) { .workflow-launch { grid-template-columns:1fr 1fr; }.workflow-steps { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:650px) { .workflow-launch,.workflow-steps { grid-template-columns:1fr; }.workflow-heading { flex-direction:column; } }

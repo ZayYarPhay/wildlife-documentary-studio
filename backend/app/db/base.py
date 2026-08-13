@@ -6,6 +6,7 @@ from app.models.scene import Scene, ScenePrompt
 from app.models.script import Script, ScriptSection
 from app.models.timeline import Timeline, TimelineItem
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack
+from app.models.workflow import WorkflowRun, WorkflowStep
 
 __all__ = [
     "AudioAsset",
@@ -25,5 +26,7 @@ __all__ = [
     "TimelineItem",
     "TranscriptSegment",
     "VoiceTrack",
+    "WorkflowRun",
+    "WorkflowStep",
 ]
 from app.models.audio import AudioAsset, AudioSettings

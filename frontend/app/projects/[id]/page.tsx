@@ -12,6 +12,7 @@ import { VideoGenerationPanel } from "@/components/video-generation-panel";
 import { VoicePanel } from "@/components/voice-panel";
 import { TimelinePanel } from "@/components/timeline-panel";
 import { AudioPanel } from "@/components/audio-panel";
+import { WorkflowPanel } from "@/components/workflow-panel";
 import { api } from "@/lib/api";
 import { Project } from "@/types/project";
 
@@ -55,6 +56,7 @@ export default function ProjectDetails() {
     <div className="tabs">{tabs.map((tab) => <button className={`tab ${activeTab === tab ? "active" : ""}`} onClick={() => setActiveTab(tab)} key={tab}>{tab}</button>)}</div>
     <div className="details"><section className="card"><h2>Project brief</h2><dl className="detail-list"><div><dt>Status</dt><dd>{project.status}</dd></div><div><dt>Phase</dt><dd>{project.current_phase}</dd></div><div><dt>Duration</dt><dd>{project.requested_duration_seconds / 60} minutes</dd></div><div><dt>Language</dt><dd>{project.language}</dd></div><div><dt>Tone</dt><dd>{project.documentary_tone}</dd></div><div><dt>Resolution</dt><dd>{project.output_resolution}</dd></div></dl></section>
       <aside className="card"><span className="pill">Phase 2</span><h2 style={{ marginTop: 16 }}>Narration studio</h2><p>Review source-backed research, then generate and refine a versioned documentary script.</p><div className="actions"><button className="button secondary" onClick={edit}>Edit project</button><button className="button danger" onClick={remove}>Delete</button></div></aside></div>
+    <WorkflowPanel projectId={project.id} onProjectChanged={reloadProject} onOpenManual={setActiveTab} />
     {activeTab === "Research" && <ResearchPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Script" && <ScriptPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Scenes" && <ScenesPanel projectId={project.id} onProjectChanged={reloadProject} />}

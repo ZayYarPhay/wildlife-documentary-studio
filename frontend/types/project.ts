@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "AUDIO_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW" | "AUDIO" | "AUDIO_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "AUDIO_REVIEW" | "WORKFLOW_RUNNING" | "PIPELINE_PAUSED" | "VOICE_WAITING" | "RENDER_READY" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW" | "AUDIO" | "AUDIO_REVIEW" | "WORKFLOW" | "RENDER_READY";
   created_at: string;
   updated_at: string;
 };
@@ -308,6 +308,56 @@ export type AudioBundle = {
   assets: AudioAsset[];
   srt_url: string | null;
   mix_plan: Record<string, unknown>;
+};
+
+export type WorkflowMode = "MANUAL" | "AUTO";
+export type WorkflowRunStatus = "PENDING" | "RUNNING" | "PAUSED" | "VOICE_WAITING" | "FAILED" | "RENDER_READY" | "CANCELED";
+export type WorkflowStepStatus = "PENDING" | "RUNNING" | "WAITING" | "COMPLETED" | "SKIPPED" | "FAILED";
+
+export type WorkflowPolicy = {
+  auto_approve_research: boolean;
+  auto_approve_script: boolean;
+  auto_select_media: boolean;
+  generate_ai_video: boolean;
+  fallback_missing_stock_to_image: boolean;
+};
+
+export type WorkflowStep = {
+  id: number;
+  name: string;
+  order: number;
+  status: WorkflowStepStatus;
+  progress: number;
+  attempts: number;
+  operation: string | null;
+  error_message: string | null;
+  metadata_json: Record<string, unknown>;
+  started_at: string | null;
+  finished_at: string | null;
+};
+
+export type WorkflowRun = {
+  id: number;
+  project_id: number;
+  mode: WorkflowMode;
+  status: WorkflowRunStatus;
+  current_step: string | null;
+  current_operation: string | null;
+  current_job_id: number | null;
+  progress: number;
+  pause_requested: boolean;
+  policy_json: WorkflowPolicy;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  finished_at: string | null;
+  steps: WorkflowStep[];
+};
+
+export type WorkflowBundle = {
+  project_id: number;
+  current: WorkflowRun | null;
+  runs: WorkflowRun[];
 };
 
 export type SceneBundle = {

@@ -178,6 +178,9 @@ async def run_transcription(job_id: int, provider: TranscriptionProvider | None 
         job.status = "COMPLETED"
         job.progress = 1
         db.commit()
+        from app.services.workflow import resume_waiting_workflow
+
+        await resume_waiting_workflow(track.project_id)
     except Exception as exc:  # noqa: BLE001 - provider diagnostics are persisted
         db.rollback()
         job = db.get(GenerationJob, job_id)

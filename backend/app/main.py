@@ -18,10 +18,12 @@ from app.api.scripts import router as scripts_router
 from app.api.timelines import router as timelines_router
 from app.api.videos import router as videos_router
 from app.api.voice import router as voice_router
+from app.api.workflow import router as workflow_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging
-from app.db.session import Base, engine
+from app.db.session import Base, SessionLocal, engine
 from app.services.media_tools import media_tool_status
+from app.services.workflow import recover_interrupted_workflows
 
 configure_logging()
 
@@ -29,6 +31,8 @@ configure_logging()
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    with SessionLocal() as db:
+        recover_interrupted_workflows(db)
     yield
 
 
@@ -52,6 +56,7 @@ app.include_router(videos_router)
 app.include_router(voice_router)
 app.include_router(timelines_router)
 app.include_router(audio_router)
+app.include_router(workflow_router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -1,4 +1,4 @@
-import { AudioBundle, AudioSettings, DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
+import { AudioBundle, AudioSettings, DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -89,4 +89,10 @@ export const api = {
     if (!response.ok) throw new Error(body?.error?.message ?? body?.detail ?? "Audio upload failed");
     return body as AudioBundle;
   },
+  getWorkflow: (projectId: number) => request<WorkflowBundle>(`/api/projects/${projectId}/workflow`),
+  startWorkflow: (projectId: number, mode: WorkflowMode, policy: WorkflowPolicy) => request<WorkflowRun>(`/api/projects/${projectId}/workflow/start`, {method:"POST",body:JSON.stringify({mode,policy})}),
+  pauseWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/pause`, {method:"POST"}),
+  resumeWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/resume`, {method:"POST"}),
+  retryWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/retry`, {method:"POST"}),
+  cancelWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/cancel`, {method:"POST"}),
 };
