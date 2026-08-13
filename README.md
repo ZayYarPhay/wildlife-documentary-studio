@@ -12,6 +12,12 @@ Complete Phase 0–12 application with optional Phase 13 topic discovery and Pha
 
 ## Setup
 
+### One-click Windows launch
+
+Double-click `RunWDS.bat` in the repository root. On the first run it checks or installs missing project dependencies, creates `backend/.env` from the safe example, applies database migrations, starts the backend and frontend in separate minimized windows, waits for readiness, and opens `http://localhost:3000`.
+
+Close the windows titled `WDS Backend` and `WDS Frontend` to stop the local app. Run `RunWDS.bat --check` from a terminal to validate prerequisites and migrations without starting services.
+
 ### Backend
 
 ```powershell
