@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     transcription_provider: str = "mock"
     transcription_timeout_seconds: int = 180
     voice_upload_max_bytes: int = 536_870_912
+    timeline_fps: int = 24
+    timeline_gap_tolerance_seconds: float = 0.05
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

@@ -1,4 +1,4 @@
-import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
+import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -77,4 +77,8 @@ export const api = {
   updateTranscriptSegment: (segmentId: number, text: string) => request<TranscriptSegment>(`/api/transcript-segments/${segmentId}`, {method:"PATCH",body:JSON.stringify({text})}),
   updateVoiceAlignment: (alignmentId: number, recommendedStart: number, recommendedEnd: number) => request<SceneVoiceAlignment>(`/api/voice-alignments/${alignmentId}`, {method:"PATCH",body:JSON.stringify({recommended_start:recommendedStart,recommended_end:recommendedEnd})}),
   applyVoiceTiming: (trackId: number) => request<VoiceBundle>(`/api/voice-tracks/${trackId}/apply`, {method:"POST"}),
+  getTimeline: (projectId: number) => request<TimelineBundle>(`/api/projects/${projectId}/timeline`),
+  buildTimeline: (projectId: number) => request<TimelineBundle>(`/api/projects/${projectId}/timeline/build`, {method:"POST"}),
+  updateTimelineItem: (itemId: number, payload: Partial<Pick<TimelineItem,"start_time"|"end_time"|"source_in"|"source_out"|"transition"|"effect">>) => request<TimelineItem>(`/api/timeline-items/${itemId}`, {method:"PATCH",body:JSON.stringify(payload)}),
+  validateTimeline: (timelineId: number) => request<Timeline>(`/api/timelines/${timelineId}/validate`, {method:"POST"}),
 };

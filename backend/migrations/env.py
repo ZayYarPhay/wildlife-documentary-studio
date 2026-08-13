@@ -16,6 +16,8 @@ from app.db.base import (
     SceneVoiceAlignment,
     Script,
     ScriptSection,
+    Timeline,
+    TimelineItem,
     TranscriptSegment,
     VoiceTrack,
 )
@@ -33,6 +35,8 @@ _registered_models = (
     Scene,
     ScenePrompt,
     SceneVoiceAlignment,
+    Timeline,
+    TimelineItem,
     TranscriptSegment,
     VoiceTrack,
 )

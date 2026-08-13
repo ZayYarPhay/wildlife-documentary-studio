@@ -14,6 +14,7 @@ from app.api.projects import router as projects_router
 from app.api.research import router as research_router
 from app.api.scenes import router as scenes_router
 from app.api.scripts import router as scripts_router
+from app.api.timelines import router as timelines_router
 from app.api.videos import router as videos_router
 from app.api.voice import router as voice_router
 from app.core.config import get_settings
@@ -48,6 +49,7 @@ app.include_router(media_router)
 app.include_router(images_router)
 app.include_router(videos_router)
 app.include_router(voice_router)
+app.include_router(timelines_router)
 
 
 @app.exception_handler(RequestValidationError)

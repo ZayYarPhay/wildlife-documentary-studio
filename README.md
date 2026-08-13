@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 7 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation and user voice-over alignment.
+Phase 8 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment and deterministic timeline planning.
 
 ## Architecture
 
@@ -230,6 +230,30 @@ The default `TRANSCRIPTION_PROVIDER=mock` uses the approved scene narration to g
 - `PATCH /api/voice-alignments/{alignment_id}`
 - `POST /api/voice-tracks/{track_id}/apply`
 
+## Phase 8 scope
+
+- Versioned `Timeline` and ordered `TimelineItem` persistence
+- Track architecture for VISUAL, VOICE, MUSIC, AMBIENT and SUBTITLE; Phase 8 only populates visual and voice
+- Deterministic timeline building from applied voice duration, scene timing and each scene's selected media
+- Selected video trim/loop planning, exact scale/crop and FPS normalization metadata
+- Selected still-image duration filling with a subtle centered Ken Burns zoom/pan, preserved aspect ratio and no black borders
+- Minimal documentary transition policy using cuts by default
+- Missing visual/local source, gap, overlap, invalid range and duration mismatch validation
+- Safe automatic gap/missing-visual fill using the previous selected visual when possible
+- Provider-independent intermediate JSON render plan rather than one monolithic FFmpeg command
+- Logged FFmpeg item runner with captured stderr and clear failure diagnostics
+- Ordered track visualization, source previews, warnings, timing/transition edits, validation and rebuild/version controls
+- No polished final export, subtitles, music or ambient mix yet
+
+Timeline validity requires one voice item covering the voice-over exactly and contiguous visual coverage for the same duration. Rebuilding creates a new immutable timeline version; manual edits affect only the selected version and never rewrite scene media or narration.
+
+### Timeline API
+
+- `GET /api/projects/{project_id}/timeline`
+- `POST /api/projects/{project_id}/timeline/build`
+- `PATCH /api/timeline-items/{item_id}`
+- `POST /api/timelines/{timeline_id}/validate`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock/image/video/transcription credentials, timeline composition and final rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.
+Authentication, real web retrieval/LLM/stock/image/video/transcription credentials, subtitles/audio mixing and final polished rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.

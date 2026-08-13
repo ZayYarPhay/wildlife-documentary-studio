@@ -4,6 +4,7 @@ from app.models.project import Project
 from app.models.research import ResearchFact, ResearchSource
 from app.models.scene import Scene, ScenePrompt
 from app.models.script import Script, ScriptSection
+from app.models.timeline import Timeline, TimelineItem
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack
 
 __all__ = [
@@ -18,6 +19,8 @@ __all__ = [
     "SceneVoiceAlignment",
     "Script",
     "ScriptSection",
+    "Timeline",
+    "TimelineItem",
     "TranscriptSegment",
     "VoiceTrack",
 ]

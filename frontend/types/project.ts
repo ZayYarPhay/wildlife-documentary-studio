@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -227,6 +227,43 @@ export type VoiceBundle = {
   active: VoiceTrack | null;
   tracks: VoiceTrack[];
   warning: string | null;
+};
+
+export type TimelineItem = {
+  id: number;
+  track: "VISUAL" | "VOICE" | "MUSIC" | "AMBIENT" | "SUBTITLE";
+  order: number;
+  scene_id: number | null;
+  asset_id: number | null;
+  voice_track_id: number | null;
+  start_time: number;
+  end_time: number;
+  source_in: number;
+  source_out: number | null;
+  transition: string;
+  effect: string | null;
+  metadata_json: Record<string, unknown>;
+};
+
+export type Timeline = {
+  id: number;
+  project_id: number;
+  voice_track_id: number;
+  version: number;
+  duration: number;
+  output_resolution: string;
+  fps: number;
+  valid: boolean;
+  warnings_json: {code:string;message:string;scene_id:number|null;severity:"WARNING"|"ERROR"}[];
+  render_plan_json: Record<string, unknown>;
+  created_at: string;
+  items: TimelineItem[];
+};
+
+export type TimelineBundle = {
+  project_id: number;
+  current: Timeline | null;
+  versions: Timeline[];
 };
 
 export type SceneBundle = {
