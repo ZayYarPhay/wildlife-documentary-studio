@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+pytest-cache-files-*/
+*.pyc
+backend/wildlife.db
+backend/test_wildlife.db
+frontend/node_modules/
+frontend/.next/
+frontend/tsconfig.tsbuildinfo
+storage/projects/*
+!storage/projects/.gitkeep
