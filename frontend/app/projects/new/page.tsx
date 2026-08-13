@@ -17,7 +17,7 @@ export default function NewProject() {
       const project = await api.createProject({
         title: String(data.get("title")), animal_topic: autoTopic ? null : String(data.get("topic")), auto_topic: autoTopic,
         language: String(data.get("language")), requested_duration_seconds: Number(data.get("duration")) * 60,
-        output_resolution: String(data.get("resolution")),
+        output_resolution: String(data.get("resolution")), documentary_tone: String(data.get("tone")),
       });
       router.push(`/projects/${project.id}`);
     } catch (e) { setError(e instanceof Error ? e.message : "Could not create project"); setBusy(false); }
@@ -30,9 +30,9 @@ export default function NewProject() {
       <label className="toggle wide"><input type="checkbox" checked={autoTopic} onChange={(e) => setAutoTopic(e.target.checked)} /> Let AI choose a topic later</label>
       <label>Duration<select name="duration" defaultValue="5">{Array.from({length:14},(_,i)=>i+2).map((m)=><option key={m} value={m}>{m} minutes</option>)}</select></label>
       <label>Language<select name="language"><option>English</option><option>Burmese</option><option>Thai</option></select></label>
+      <label className="wide">Documentary tone<select name="tone"><option value="cinematic wildlife documentary">Cinematic wildlife documentary</option><option value="educational">Educational</option><option value="dramatic">Dramatic</option><option value="calm nature">Calm / nature</option><option value="family friendly">Family friendly</option></select></label>
       <label className="wide">Output resolution<select name="resolution"><option value="1920x1080">1080p — 1920×1080</option><option value="1280x720">720p — 1280×720</option></select></label>
       <div className="actions wide"><button className="button" disabled={busy}>{busy ? "Creating…" : "Create project"}</button><Link className="button secondary" href="/">Cancel</Link></div>
     </form>
   </div>;
 }
-

@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.projects import router as projects_router
 from app.api.research import router as research_router
+from app.api.scripts import router as scripts_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.db.session import Base, engine
@@ -34,6 +35,7 @@ app.add_middleware(
 )
 app.include_router(projects_router)
 app.include_router(research_router)
+app.include_router(scripts_router)
 
 
 @app.exception_handler(RequestValidationError)

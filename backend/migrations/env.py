@@ -4,10 +4,26 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from app.core.config import get_settings
-from app.db.base import GenerationJob, Project, RenderJob, ResearchFact, ResearchSource
+from app.db.base import (
+    GenerationJob,
+    Project,
+    RenderJob,
+    ResearchFact,
+    ResearchSource,
+    Script,
+    ScriptSection,
+)
 from app.db.session import Base
 
-_registered_models = (GenerationJob, Project, RenderJob, ResearchFact, ResearchSource)
+_registered_models = (
+    GenerationJob,
+    Project,
+    RenderJob,
+    ResearchFact,
+    ResearchSource,
+    Script,
+    ScriptSection,
+)
 
 config = context.config
 config.set_main_option("sqlalchemy.url", get_settings().database_url)

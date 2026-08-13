@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     research_provider: str = "mock"
     research_timeout_seconds: int = 30
+    llm_provider: str = "mock"
+    llm_timeout_seconds: int = 60
+    narration_words_per_minute: int = 140
+    script_length_tolerance: float = 0.15
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

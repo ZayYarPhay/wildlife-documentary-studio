@@ -1,4 +1,4 @@
-import { Project, ProjectCreate, ResearchBundle, ResearchFact } from "@/types/project";
+import { DocumentaryScript, Project, ProjectCreate, ResearchBundle, ResearchFact, ScriptBundle, ScriptSection } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -32,4 +32,14 @@ export const api = {
   approveFact: (factId: number) =>
     request<ResearchFact>(`/api/research/facts/${factId}/approve`, { method: "POST" }),
   deleteFact: (factId: number) => request<void>(`/api/research/facts/${factId}`, { method: "DELETE" }),
+  getScript: (projectId: number) => request<ScriptBundle>(`/api/projects/${projectId}/script`),
+  generateScript: (projectId: number) =>
+    request<ScriptBundle>(`/api/projects/${projectId}/script/generate`, { method: "POST" }),
+  updateScript: (scriptId: number, payload: {full_text?: string; tone?: string}) =>
+    request<DocumentaryScript>(`/api/scripts/${scriptId}`, { method: "PATCH", body: JSON.stringify(payload) }),
+  updateScriptSection: (sectionId: number, payload: {title?: string; text?: string}) =>
+    request<ScriptSection>(`/api/script-sections/${sectionId}`, { method: "PATCH", body: JSON.stringify(payload) }),
+  regenerateScriptSection: (sectionId: number, mode: "regenerate" | "shorten" | "expand") =>
+    request<ScriptSection>(`/api/script-sections/${sectionId}/regenerate`, { method: "POST", body: JSON.stringify({mode}) }),
+  approveScript: (scriptId: number) => request<DocumentaryScript>(`/api/scripts/${scriptId}/approve`, { method: "POST" }),
 };

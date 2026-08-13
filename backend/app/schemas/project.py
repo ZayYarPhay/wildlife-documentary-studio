@@ -12,6 +12,9 @@ class ProjectBase(BaseModel):
     language: str = Field(min_length=1, max_length=50)
     requested_duration_seconds: int = Field(ge=120, le=900)
     output_resolution: str = Field(default="1920x1080", pattern=r"^\d{3,5}x\d{3,5}$")
+    documentary_tone: str = Field(
+        default="cinematic wildlife documentary", min_length=1, max_length=100
+    )
 
     @model_validator(mode="after")
     def validate_topic(self) -> "ProjectBase":
@@ -31,6 +34,7 @@ class ProjectUpdate(BaseModel):
     language: str | None = Field(default=None, min_length=1, max_length=50)
     requested_duration_seconds: int | None = Field(default=None, ge=120, le=900)
     output_resolution: str | None = Field(default=None, pattern=r"^\d{3,5}x\d{3,5}$")
+    documentary_tone: str | None = Field(default=None, min_length=1, max_length=100)
 
 
 class ProjectRead(ProjectBase):

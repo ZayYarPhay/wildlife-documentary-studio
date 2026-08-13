@@ -15,6 +15,8 @@ class ProjectStatus(str, enum.Enum):
     DRAFT = "DRAFT"
     RESEARCHING = "RESEARCHING"
     RESEARCH_REVIEW = "RESEARCH_REVIEW"
+    SCRIPTING = "SCRIPTING"
+    SCRIPT_REVIEW = "SCRIPT_REVIEW"
     FAILED = "FAILED"
 
 
@@ -22,6 +24,8 @@ class ProjectPhase(str, enum.Enum):
     FOUNDATION = "FOUNDATION"
     RESEARCH = "RESEARCH"
     RESEARCH_REVIEW = "RESEARCH_REVIEW"
+    SCRIPT = "SCRIPT"
+    SCRIPT_REVIEW = "SCRIPT_REVIEW"
 
 
 class Project(Base):
@@ -34,6 +38,9 @@ class Project(Base):
     language: Mapped[str] = mapped_column(String(50))
     requested_duration_seconds: Mapped[int] = mapped_column(Integer)
     output_resolution: Mapped[str] = mapped_column(String(20), default="1920x1080")
+    documentary_tone: Mapped[str] = mapped_column(
+        String(100), default="cinematic wildlife documentary"
+    )
     status: Mapped[ProjectStatus] = mapped_column(Enum(ProjectStatus), default=ProjectStatus.DRAFT)
     current_phase: Mapped[ProjectPhase] = mapped_column(
         Enum(ProjectPhase), default=ProjectPhase.FOUNDATION
