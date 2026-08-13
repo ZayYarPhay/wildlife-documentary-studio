@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 3 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration and editable timed scene plans while keeping providers replaceable.
+Phase 4 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes and ranked stock-media selection while keeping providers replaceable.
 
 ## Architecture
 
@@ -127,6 +127,30 @@ The default `LLM_PROVIDER=mock` generates deterministic development narration an
 - `POST /api/scenes/{scene_id}/regenerate`
 - `POST /api/projects/{id}/scenes/reorder`
 
+## Phase 4 scope
+
+- Provider-neutral stock-video search using the existing `StockMediaProvider`
+- Short query variants derived from species, environment, behavior and shot type
+- Candidate deduplication across multiple query variants
+- Transparent relevance scoring for keywords, landscape framing, resolution and usable duration
+- Preference for landscape 16:9, 1080p-or-better footage
+- Persistent provider/source/creator/license/attribution metadata
+- Candidate, selected and rejected asset states
+- One preferred media asset per scene
+- Search-again behavior preserves existing selection and avoids duplicate assets
+- Provider failures preserve previously retrieved candidates
+- Scene picker and ranked candidate cards in the Media tab
+- No arbitrary URL download endpoint; mock mode does not download external files
+
+The default `STOCK_MEDIA_PROVIDER=mock` supplies UI/test placeholders. It deliberately stores `license = null` and requires provider terms to be confirmed. Implement a real provider adapter and verify its license fields before production use. Future download implementations must enforce content-type checks, size limits, timeouts and safe filenames; current Phase 4 selection is metadata-only.
+
+### Stock-media API
+
+- `POST /api/scenes/{scene_id}/stock/search`
+- `GET /api/scenes/{scene_id}/stock`
+- `POST /api/media-assets/{asset_id}/select`
+- `POST /api/media-assets/{asset_id}/reject`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM credentials, stock-media search, media generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Phase 3 creates prompts and recommendations only; it does not download or generate visual media.
+Authentication, real web retrieval/LLM/stock credentials, AI media generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Phase 4 stores stock metadata and selection only; it does not download footage or generate visual media.

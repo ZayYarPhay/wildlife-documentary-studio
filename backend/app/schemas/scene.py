@@ -52,6 +52,7 @@ class SceneRead(SceneBase):
     start_time: float
     end_time: float
     status: SceneStatus
+    preferred_media_asset_id: int | None
     prompts: list[ScenePromptRead]
 
 

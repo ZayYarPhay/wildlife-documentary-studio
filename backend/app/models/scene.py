@@ -45,6 +45,7 @@ class Scene(Base):
     camera_motion: Mapped[str] = mapped_column(String(100))
     visual_strategy: Mapped[VisualStrategy] = mapped_column(Enum(VisualStrategy))
     status: Mapped[SceneStatus] = mapped_column(Enum(SceneStatus), default=SceneStatus.READY)
+    preferred_media_asset_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     prompts: Mapped[list["ScenePrompt"]] = relationship(
         back_populates="scene", cascade="all, delete-orphan", order_by="ScenePrompt.version"

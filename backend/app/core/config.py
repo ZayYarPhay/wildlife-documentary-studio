@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     llm_timeout_seconds: int = 60
     narration_words_per_minute: int = 140
     script_length_tolerance: float = 0.15
+    stock_media_provider: str = "mock"
+    stock_search_timeout_seconds: int = 30
+    stock_download_on_select: bool = False
+    stock_max_download_bytes: int = 1_073_741_824
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

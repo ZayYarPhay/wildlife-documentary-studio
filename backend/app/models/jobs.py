@@ -11,6 +11,9 @@ class GenerationJob(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     project_id: Mapped[int] = mapped_column(ForeignKey("projects.id", ondelete="CASCADE"))
+    scene_id: Mapped[int | None] = mapped_column(
+        ForeignKey("scenes.id", ondelete="CASCADE"), nullable=True
+    )
     job_type: Mapped[str] = mapped_column(String(50))
     provider: Mapped[str] = mapped_column(String(100))
     status: Mapped[str] = mapped_column(String(30), default="PENDING")

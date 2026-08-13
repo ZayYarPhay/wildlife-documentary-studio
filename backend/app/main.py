@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.api.media import router as media_router
 from app.api.projects import router as projects_router
 from app.api.research import router as research_router
 from app.api.scenes import router as scenes_router
@@ -38,6 +39,7 @@ app.include_router(projects_router)
 app.include_router(research_router)
 app.include_router(scripts_router)
 app.include_router(scenes_router)
+app.include_router(media_router)
 
 
 @app.exception_handler(RequestValidationError)

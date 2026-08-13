@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -104,7 +104,41 @@ export type Scene = {
   camera_motion: string;
   visual_strategy: VisualStrategy;
   status: "PENDING" | "READY" | "APPROVED" | "FAILED" | "SKIPPED";
+  preferred_media_asset_id: number | null;
   prompts: ScenePrompt[];
+};
+
+export type MediaAsset = {
+  id: number;
+  project_id: number;
+  scene_id: number;
+  provider: string;
+  provider_asset_id: string;
+  type: "STOCK_VIDEO" | "STOCK_IMAGE" | "AI_IMAGE" | "AI_VIDEO" | "AUDIO" | "MUSIC" | "SFX";
+  preview_url: string;
+  download_url: string | null;
+  source_page_url: string;
+  creator: string | null;
+  license: string | null;
+  attribution_requirements: string | null;
+  width: number | null;
+  height: number | null;
+  duration: number | null;
+  local_path: string | null;
+  metadata_json: Record<string, unknown>;
+  relevance_score: number;
+  status: "CANDIDATE" | "SELECTED" | "REJECTED" | "FAILED";
+  created_at: string;
+};
+
+export type StockSearchBundle = {
+  scene_id: number;
+  provider: string;
+  is_mock: boolean;
+  queries: string[];
+  selected_asset_id: number | null;
+  assets: MediaAsset[];
+  warning: string | null;
 };
 
 export type SceneBundle = {

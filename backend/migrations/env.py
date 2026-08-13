@@ -6,6 +6,7 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import get_settings
 from app.db.base import (
     GenerationJob,
+    MediaAsset,
     Project,
     RenderJob,
     ResearchFact,
@@ -19,6 +20,7 @@ from app.db.session import Base
 
 _registered_models = (
     GenerationJob,
+    MediaAsset,
     Project,
     RenderJob,
     ResearchFact,

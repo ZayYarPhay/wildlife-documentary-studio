@@ -75,4 +75,19 @@ input,select { width:100%; padding:13px 14px; background:white; border:1px solid
 .scene-fields { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:12px 0; }
 .scene-content details { margin-top:12px; color:var(--muted); font-size:13px; }
 .scene-content summary { cursor:pointer; color:var(--green); font-weight:700; }
-@media (max-width:700px) { .hero,.details,.section-heading { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } }
+.media-scene-picker { display:grid; grid-template-columns:minmax(260px,1fr) 2fr; gap:24px; align-items:center; margin-bottom:18px; }
+.query-list { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:16px 0; color:var(--muted); }
+.query-chip { background:white; border:1px solid var(--line); border-radius:99px; padding:6px 10px; font-size:12px; }
+.stock-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px; }
+.stock-card { padding:0; overflow:hidden; }
+.stock-card.selected { outline:3px solid var(--green); }
+.stock-card.rejected { opacity:.55; }
+.stock-preview { height:180px; background-size:cover; background-position:center; display:flex; align-items:end; padding:12px; background-color:#1f3d2a; }
+.stock-preview span { background:rgba(17,31,22,.85); color:white; padding:6px 9px; border-radius:8px; font-size:11px; }
+.stock-body { padding:18px; }
+.stock-heading { display:flex; justify-content:space-between; gap:12px; }
+.stock-heading h3 { margin:0; font-size:18px; }
+.score { min-width:46px; height:46px; display:grid; place-items:center; border-radius:50%; background:#e4eddc; color:var(--green); font-weight:800; }
+.stock-body small { display:block; color:var(--muted); margin:8px 0; }
+.source-link { display:inline-block; color:var(--green); font-weight:700; font-size:13px; margin-top:8px; }
+@media (max-width:700px) { .hero,.details,.section-heading,.media-scene-picker { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid,.scene-fields { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } .duration-bar,.script-toolbar { align-items:flex-start; flex-direction:column; } }
