@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     video_generation_max_retries: int = 1
     video_generation_fps: int = 24
     video_generation_max_duration_seconds: float = 10
+    transcription_provider: str = "mock"
+    transcription_timeout_seconds: int = 180
+    voice_upload_max_bytes: int = 536_870_912
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

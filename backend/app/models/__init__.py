@@ -4,6 +4,7 @@ from app.models.project import Project, ProjectPhase, ProjectStatus
 from app.models.research import ResearchFact, ResearchSource
 from app.models.scene import Scene, ScenePrompt, SceneStatus, VisualStrategy
 from app.models.script import Script, ScriptSection
+from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack, VoiceTrackStatus
 
 __all__ = [
     "GenerationJob",
@@ -19,7 +20,11 @@ __all__ = [
     "Scene",
     "ScenePrompt",
     "SceneStatus",
+    "SceneVoiceAlignment",
     "Script",
     "ScriptSection",
+    "TranscriptSegment",
     "VisualStrategy",
+    "VoiceTrack",
+    "VoiceTrackStatus",
 ]

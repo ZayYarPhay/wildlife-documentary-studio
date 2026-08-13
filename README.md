@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 6 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes, ranked stock media and provider-neutral AI image/video generation.
+Phase 7 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation and user voice-over alignment.
 
 ## Architecture
 
@@ -204,6 +204,32 @@ The default `VIDEO_GENERATION_PROVIDER=mock` uses local FFmpeg to create a deter
 - `POST /api/scenes/{scene_id}/video-fallback`
 - `POST /api/media-assets/{asset_id}/select`
 
+## Phase 7 scope
+
+- Secure WAV, MP3 and FFmpeg-supported M4A voice-over upload
+- Extension, MIME, magic-byte, size-limit and FFprobe audio-stream validation
+- Random safe storage filenames under managed project media; original filenames remain metadata only
+- Provider-neutral transcription through `TranscriptionProvider`
+- Persistent `VoiceTrack`, timestamped `TranscriptSegment` and per-scene alignment records
+- Approximate sequential script/transcript matching with overall and scene-level confidence
+- Mismatch warnings plus manual transcript and timing correction
+- Voice duration as scene-timing authority without automatically changing speech speed
+- Scene timing recommendations for safe trim, image-motion extension, stock looping/additional clips or AI-video extension/splitting
+- Explicit timing application that preserves approved script text and all selected media
+- Upload history, audio player, transcript editor, re-transcribe and apply-timing UI
+- No automatic timeline/render composition yet
+
+The default `TRANSCRIPTION_PROVIDER=mock` uses the approved scene narration to generate deterministic timestamp segments. It tests persistence, alignment and review behavior but does not listen to the uploaded audio. Configure a real provider adapter for speech recognition.
+
+### Voice-over API
+
+- `GET /api/projects/{project_id}/voice`
+- `POST /api/projects/{project_id}/voice/upload`
+- `POST /api/voice-tracks/{track_id}/transcribe`
+- `PATCH /api/transcript-segments/{segment_id}`
+- `PATCH /api/voice-alignments/{alignment_id}`
+- `POST /api/voice-tracks/{track_id}/apply`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock/image/video credentials, voice-over, timelines and final rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Stock selection remains metadata-only; Phase 5/6 mock image and video output is local development media.
+Authentication, real web retrieval/LLM/stock/image/video/transcription credentials, timeline composition and final rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.

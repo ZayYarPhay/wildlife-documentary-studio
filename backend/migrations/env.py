@@ -13,8 +13,11 @@ from app.db.base import (
     ResearchSource,
     Scene,
     ScenePrompt,
+    SceneVoiceAlignment,
     Script,
     ScriptSection,
+    TranscriptSegment,
+    VoiceTrack,
 )
 from app.db.session import Base
 
@@ -29,6 +32,9 @@ _registered_models = (
     ScriptSection,
     Scene,
     ScenePrompt,
+    SceneVoiceAlignment,
+    TranscriptSegment,
+    VoiceTrack,
 )
 
 config = context.config

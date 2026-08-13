@@ -9,6 +9,7 @@ import { ScenesPanel } from "@/components/scenes-panel";
 import { MediaPanel } from "@/components/media-panel";
 import { ImageGenerationPanel } from "@/components/image-generation-panel";
 import { VideoGenerationPanel } from "@/components/video-generation-panel";
+import { VoicePanel } from "@/components/voice-panel";
 import { api } from "@/lib/api";
 import { Project } from "@/types/project";
 
@@ -56,6 +57,7 @@ export default function ProjectDetails() {
     {activeTab === "Script" && <ScriptPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Scenes" && <ScenesPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Media" && <><MediaPanel projectId={project.id} onProjectChanged={reloadProject} /><ImageGenerationPanel projectId={project.id} onProjectChanged={reloadProject} /><VideoGenerationPanel projectId={project.id} onProjectChanged={reloadProject} /></>}
-    {!['Research', 'Script', 'Scenes', 'Media'].includes(activeTab) && <div className="empty future-tab"><h2>{activeTab}</h2><p>This workflow becomes available in a later roadmap phase.</p></div>}
+    {activeTab === "Voice-over" && <VoicePanel projectId={project.id} onProjectChanged={reloadProject} />}
+    {!['Research', 'Script', 'Scenes', 'Media', 'Voice-over'].includes(activeTab) && <div className="empty future-tab"><h2>{activeTab}</h2><p>This workflow becomes available in a later roadmap phase.</p></div>}
   </>;
 }

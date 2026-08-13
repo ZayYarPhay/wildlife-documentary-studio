@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -180,6 +180,52 @@ export type VideoGenerationBundle = {
   jobs: GenerationJob[];
   assets: MediaAsset[];
   fallback_recommendations: ("AI_IMAGE_MOTION" | "STOCK_VIDEO")[];
+  warning: string | null;
+};
+
+export type TranscriptSegment = {
+  id: number;
+  start_time: number;
+  end_time: number;
+  text: string;
+  confidence: number | null;
+};
+
+export type SceneVoiceAlignment = {
+  id: number;
+  scene_id: number;
+  recommended_start: number;
+  recommended_end: number;
+  confidence: number;
+  mismatch: boolean;
+  visual_adjustment: string;
+  manually_edited: boolean;
+};
+
+export type VoiceTrack = {
+  id: number;
+  project_id: number;
+  public_url: string;
+  original_filename: string;
+  mime_type: string;
+  size_bytes: number;
+  duration: number;
+  language: string;
+  status: "UPLOADED" | "TRANSCRIBING" | "READY" | "FAILED" | "APPLIED";
+  alignment_confidence: number | null;
+  mismatch_warning: string | null;
+  metadata_json: Record<string, unknown>;
+  created_at: string;
+  segments: TranscriptSegment[];
+  alignments: SceneVoiceAlignment[];
+};
+
+export type VoiceBundle = {
+  project_id: number;
+  provider: string;
+  is_mock: boolean;
+  active: VoiceTrack | null;
+  tracks: VoiceTrack[];
   warning: string | null;
 };
 

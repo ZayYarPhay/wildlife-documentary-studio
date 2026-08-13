@@ -1,4 +1,4 @@
-import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, ScriptBundle, ScriptSection, StockSearchBundle, VideoGenerationBundle } from "@/types/project";
+import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -65,4 +65,16 @@ export const api = {
   generateVideo: (sceneId: number, payload: {prompt_id:number;source_asset_id:number;duration?:number;fps?:number}) => request<GenerationJob>(`/api/scenes/${sceneId}/videos/generate`, {method:"POST",body:JSON.stringify(payload)}),
   retryVideoJob: (jobId: number) => request<GenerationJob>(`/api/video-jobs/${jobId}/retry`, {method:"POST"}),
   chooseVideoFallback: (sceneId: number, strategy: "AI_IMAGE_MOTION"|"STOCK_VIDEO") => request<VideoGenerationBundle>(`/api/scenes/${sceneId}/video-fallback`, {method:"POST",body:JSON.stringify({strategy})}),
+  getVoice: (projectId: number) => request<VoiceBundle>(`/api/projects/${projectId}/voice`),
+  uploadVoice: async (projectId: number, file: File) => {
+    const form = new FormData(); form.append("file", file);
+    const response = await fetch(`${API_URL}/api/projects/${projectId}/voice/upload`, {method:"POST",body:form});
+    const body = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(body?.error?.message ?? body?.detail ?? "Upload failed");
+    return body as VoiceBundle;
+  },
+  retranscribeVoice: (trackId: number) => request<VoiceBundle>(`/api/voice-tracks/${trackId}/transcribe`, {method:"POST"}),
+  updateTranscriptSegment: (segmentId: number, text: string) => request<TranscriptSegment>(`/api/transcript-segments/${segmentId}`, {method:"PATCH",body:JSON.stringify({text})}),
+  updateVoiceAlignment: (alignmentId: number, recommendedStart: number, recommendedEnd: number) => request<SceneVoiceAlignment>(`/api/voice-alignments/${alignmentId}`, {method:"PATCH",body:JSON.stringify({recommended_start:recommendedStart,recommended_end:recommendedEnd})}),
+  applyVoiceTiming: (trackId: number) => request<VoiceBundle>(`/api/voice-tracks/${trackId}/apply`, {method:"POST"}),
 };

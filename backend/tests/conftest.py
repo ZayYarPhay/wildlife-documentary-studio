@@ -1,6 +1,7 @@
 import os
 
 os.environ["DATABASE_URL"] = "sqlite:///./test_wildlife.db"
+os.environ["MEDIA_ROOT"] = "./.test-artifacts/media"
 
 import pytest
 from fastapi.testclient import TestClient
