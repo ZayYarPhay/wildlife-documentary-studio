@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 2 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research and versioned documentary narration while keeping providers replaceable.
+Phase 3 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration and editable timed scene plans while keeping providers replaceable.
 
 ## Architecture
 
@@ -103,6 +103,30 @@ The default `LLM_PROVIDER=mock` generates deterministic development narration an
 - `POST /api/script-sections/{section_id}/regenerate`
 - `POST /api/scripts/{script_id}/approve`
 
+## Phase 3 scope
+
+- Approved scripts become ordered, timed `Scene` records
+- Natural narration chunking targets roughly 4–10 seconds per visual scene
+- Scene start/end times are recalculated after edits, insertion, deletion or reorder
+- Varied shot types and restrained camera-motion recommendations
+- `STOCK_VIDEO`, `AI_IMAGE_MOTION` and `AI_VIDEO` strategy recommendations
+- Versioned `ScenePrompt` image/video prompt plans without generating media
+- Full-plan generation plus single-scene visual-plan regeneration
+- Scene edit, add, duplicate, delete and move-up/down reorder controls
+- Total scene duration, project target and mismatch warning
+- SQLite foreign-key enforcement so project cleanup cascades safely
+- Approved script content remains unchanged during scene operations
+
+### Scene API
+
+- `POST /api/projects/{id}/scenes/generate`
+- `GET /api/projects/{id}/scenes`
+- `POST /api/projects/{id}/scenes`
+- `PATCH /api/scenes/{scene_id}`
+- `DELETE /api/scenes/{scene_id}`
+- `POST /api/scenes/{scene_id}/regenerate`
+- `POST /api/projects/{id}/scenes/reorder`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM credentials, scene planning, media generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation.
+Authentication, real web retrieval/LLM credentials, stock-media search, media generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Phase 3 creates prompts and recommendations only; it does not download or generate visual media.

@@ -1,4 +1,4 @@
-import { DocumentaryScript, Project, ProjectCreate, ResearchBundle, ResearchFact, ScriptBundle, ScriptSection } from "@/types/project";
+import { DocumentaryScript, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScriptBundle, ScriptSection } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -42,4 +42,11 @@ export const api = {
   regenerateScriptSection: (sectionId: number, mode: "regenerate" | "shorten" | "expand") =>
     request<ScriptSection>(`/api/script-sections/${sectionId}/regenerate`, { method: "POST", body: JSON.stringify({mode}) }),
   approveScript: (scriptId: number) => request<DocumentaryScript>(`/api/scripts/${scriptId}/approve`, { method: "POST" }),
+  getScenes: (projectId: number) => request<SceneBundle>(`/api/projects/${projectId}/scenes`),
+  generateScenes: (projectId: number) => request<SceneBundle>(`/api/projects/${projectId}/scenes/generate`, {method:"POST"}),
+  createScene: (projectId: number, payload: Omit<Scene,"id"|"project_id"|"script_id"|"start_time"|"end_time"|"status"|"prompts">) => request<Scene>(`/api/projects/${projectId}/scenes`, {method:"POST",body:JSON.stringify(payload)}),
+  updateScene: (sceneId: number, payload: Partial<Scene>) => request<Scene>(`/api/scenes/${sceneId}`, {method:"PATCH",body:JSON.stringify(payload)}),
+  deleteScene: (sceneId: number) => request<void>(`/api/scenes/${sceneId}`, {method:"DELETE"}),
+  regenerateScene: (sceneId: number) => request<Scene>(`/api/scenes/${sceneId}/regenerate`, {method:"POST"}),
+  reorderScenes: (projectId: number, sceneIds: number[]) => request<SceneBundle>(`/api/projects/${projectId}/scenes/reorder`, {method:"POST",body:JSON.stringify({scene_ids:sceneIds})}),
 };

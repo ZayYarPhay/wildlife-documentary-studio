@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -75,6 +75,45 @@ export type ScriptBundle = {
   current: DocumentaryScript | null;
   versions: DocumentaryScript[];
   warning: string | null;
+};
+
+export type VisualStrategy = "STOCK_VIDEO" | "AI_IMAGE_MOTION" | "AI_VIDEO";
+
+export type ScenePrompt = {
+  id: number;
+  image_prompt: string;
+  negative_prompt: string;
+  video_prompt: string;
+  version: number;
+};
+
+export type Scene = {
+  id: number;
+  project_id: number;
+  script_id: number;
+  order: number;
+  narration_text: string;
+  start_time: number;
+  end_time: number;
+  target_duration: number;
+  species: string;
+  environment: string;
+  animal_behavior: string;
+  visual_description: string;
+  shot_type: string;
+  camera_motion: string;
+  visual_strategy: VisualStrategy;
+  status: "PENDING" | "READY" | "APPROVED" | "FAILED" | "SKIPPED";
+  prompts: ScenePrompt[];
+};
+
+export type SceneBundle = {
+  project_id: number;
+  status: "idle" | "review";
+  total_duration: number;
+  target_duration: number;
+  duration_difference: number;
+  scenes: Scene[];
 };
 
 export type ProjectCreate = Pick<

@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ResearchPanel } from "@/components/research-panel";
 import { ScriptPanel } from "@/components/script-panel";
+import { ScenesPanel } from "@/components/scenes-panel";
 import { api } from "@/lib/api";
 import { Project } from "@/types/project";
 
@@ -50,6 +51,7 @@ export default function ProjectDetails() {
       <aside className="card"><span className="pill">Phase 2</span><h2 style={{ marginTop: 16 }}>Narration studio</h2><p>Review source-backed research, then generate and refine a versioned documentary script.</p><div className="actions"><button className="button secondary" onClick={edit}>Edit project</button><button className="button danger" onClick={remove}>Delete</button></div></aside></div>
     {activeTab === "Research" && <ResearchPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Script" && <ScriptPanel projectId={project.id} onProjectChanged={reloadProject} />}
-    {!['Research', 'Script'].includes(activeTab) && <div className="empty future-tab"><h2>{activeTab}</h2><p>This workflow becomes available in a later roadmap phase.</p></div>}
+    {activeTab === "Scenes" && <ScenesPanel projectId={project.id} onProjectChanged={reloadProject} />}
+    {!['Research', 'Script', 'Scenes'].includes(activeTab) && <div className="empty future-tab"><h2>{activeTab}</h2><p>This workflow becomes available in a later roadmap phase.</p></div>}
   </>;
 }

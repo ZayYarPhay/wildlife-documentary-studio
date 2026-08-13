@@ -17,6 +17,8 @@ class ProjectStatus(str, enum.Enum):
     RESEARCH_REVIEW = "RESEARCH_REVIEW"
     SCRIPTING = "SCRIPTING"
     SCRIPT_REVIEW = "SCRIPT_REVIEW"
+    SCENE_PLANNING = "SCENE_PLANNING"
+    SCENE_REVIEW = "SCENE_REVIEW"
     FAILED = "FAILED"
 
 
@@ -26,6 +28,8 @@ class ProjectPhase(str, enum.Enum):
     RESEARCH_REVIEW = "RESEARCH_REVIEW"
     SCRIPT = "SCRIPT"
     SCRIPT_REVIEW = "SCRIPT_REVIEW"
+    SCENES = "SCENES"
+    SCENE_REVIEW = "SCENE_REVIEW"
 
 
 class Project(Base):

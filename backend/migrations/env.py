@@ -10,6 +10,8 @@ from app.db.base import (
     RenderJob,
     ResearchFact,
     ResearchSource,
+    Scene,
+    ScenePrompt,
     Script,
     ScriptSection,
 )
@@ -23,6 +25,8 @@ _registered_models = (
     ResearchSource,
     Script,
     ScriptSection,
+    Scene,
+    ScenePrompt,
 )
 
 config = context.config
