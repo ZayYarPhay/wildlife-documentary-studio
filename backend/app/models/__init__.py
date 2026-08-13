@@ -7,6 +7,7 @@ from app.models.scene import Scene, ScenePrompt, SceneStatus, VisualStrategy
 from app.models.script import Script, ScriptSection
 from app.models.timeline import Timeline, TimelineItem, TimelineTrack
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack, VoiceTrackStatus
+from app.models.worker import WorkerJob, WorkerJobStatus
 from app.models.workflow import (
     WorkflowMode,
     WorkflowRun,
@@ -42,6 +43,8 @@ __all__ = [
     "VisualStrategy",
     "VoiceTrack",
     "VoiceTrackStatus",
+    "WorkerJob",
+    "WorkerJobStatus",
     "WorkflowMode",
     "WorkflowRun",
     "WorkflowRunStatus",

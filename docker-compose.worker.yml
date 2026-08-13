@@ -1,0 +1,14 @@
+services:
+  generation-worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://host.docker.internal:8000}
+      WORKER_AUTH_TOKEN: ${WORKER_AUTH_TOKEN:?Set WORKER_AUTH_TOKEN}
+      WORKER_ID: ${WORKER_ID:-local-docker-worker}
+      WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-2}
+    ports:
+      - "8081:8081"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

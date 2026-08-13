@@ -274,6 +274,57 @@ async def resume_waiting_workflow(project_id: int) -> None:
         await run_workflow(run_id)
 
 
+async def resume_remote_workflow(project_id: int) -> None:
+    db = SessionLocal()
+    try:
+        run = db.scalar(
+            select(WorkflowRun).where(
+                WorkflowRun.project_id == project_id,
+                WorkflowRun.active_key == "ACTIVE",
+                WorkflowRun.mode == WorkflowMode.AUTO,
+                WorkflowRun.status == WorkflowRunStatus.PAUSED,
+                WorkflowRun.current_step.in_(["IMAGES", "VIDEOS"]),
+            )
+        )
+        if run:
+            run.status = WorkflowRunStatus.PENDING
+            run.current_operation = "Remote worker result received; checking queued generation"
+            db.commit()
+        run_id = run.id if run else None
+    finally:
+        db.close()
+    if run_id is not None:
+        await run_workflow(run_id)
+
+
+def fail_remote_workflow(project_id: int, error_message: str, db: Session) -> None:
+    run = db.scalar(
+        select(WorkflowRun)
+        .where(
+            WorkflowRun.project_id == project_id,
+            WorkflowRun.active_key == "ACTIVE",
+            WorkflowRun.status == WorkflowRunStatus.PAUSED,
+            WorkflowRun.current_step.in_(["IMAGES", "VIDEOS"]),
+        )
+        .options(selectinload(WorkflowRun.steps))
+    )
+    if run is None:
+        return
+    step = next((item for item in run.steps if item.name == run.current_step), None)
+    if step:
+        step.status = WorkflowStepStatus.FAILED
+        step.error_message = error_message
+        step.finished_at = datetime.now(UTC)
+    run.status = WorkflowRunStatus.FAILED
+    run.error_message = error_message
+    run.current_operation = f"Remote {run.current_step.lower()} worker failed"
+    project = db.get(Project, project_id)
+    if project:
+        project.status = ProjectStatus.FAILED
+        project.current_phase = ProjectPhase.WORKFLOW
+    db.commit()
+
+
 def request_pause(run: WorkflowRun, db: Session) -> WorkflowRun:
     if run.status not in {WorkflowRunStatus.PENDING, WorkflowRunStatus.RUNNING}:
         raise ValueError("Only pending or running workflows can be paused")
@@ -449,6 +500,10 @@ class ProjectWorkflow:
     async def _images(self) -> StepOutcome:
         generated = 0
         job_ids = []
+        remote_pending = []
+        from app.services.worker_queue import enqueue_generation_job, worker_mode_enabled
+
+        remote_mode = worker_mode_enabled()
         waiting = []
         for scene in self._scenes_list():
             preferred = self._preferred(scene)
@@ -482,12 +537,20 @@ class ProjectWorkflow:
             if prompt is None:
                 raise RuntimeError(f"Scene {scene.order} has no image prompt")
             latest_job = self._latest_job(scene.id, "AI_IMAGE")
+            if remote_mode and latest_job and latest_job.status in {"PENDING", "RUNNING"}:
+                job_ids.append(latest_job.id)
+                remote_pending.append(scene.order)
+                continue
             retry_count = latest_job.retry_count + 1 if latest_job and latest_job.status == "FAILED" else 0
             job = submit_image_job(scene, prompt, self.db, retry_count=retry_count)
             job_ids.append(job.id)
             self.run.current_job_id = job.id
             self.run.current_operation = f"Generating image for scene {scene.order}"
             self.db.commit()
+            if remote_mode:
+                enqueue_generation_job(job, self.db)
+                remote_pending.append(scene.order)
+                continue
             await run_image_job(job.id)
             self.db.expire_all()
             job = self.db.get(GenerationJob, job.id)
@@ -500,6 +563,12 @@ class ProjectWorkflow:
                 StockMediaService.select_asset(asset, scene, self.db)
             else:
                 waiting.append(scene.order)
+        if remote_pending:
+            return StepOutcome(
+                "WAITING",
+                f"Remote image jobs queued for scenes {', '.join(map(str, remote_pending))}",
+                {"job_ids": job_ids, "remote": True},
+            )
         if waiting:
             return StepOutcome(
                 "WAITING", f"Review/select image media for scenes {', '.join(map(str, waiting))}, then resume"
@@ -511,6 +580,10 @@ class ProjectWorkflow:
     async def _videos(self) -> StepOutcome:
         generated = 0
         job_ids = []
+        remote_pending = []
+        from app.services.worker_queue import enqueue_generation_job, worker_mode_enabled
+
+        remote_mode = worker_mode_enabled()
         waiting = []
         for scene in self._scenes_list():
             preferred = self._preferred(scene)
@@ -547,12 +620,20 @@ class ProjectWorkflow:
             if prompt is None:
                 raise RuntimeError(f"Scene {scene.order} has no video prompt")
             latest_job = self._latest_job(scene.id, "AI_VIDEO")
+            if remote_mode and latest_job and latest_job.status in {"PENDING", "RUNNING"}:
+                job_ids.append(latest_job.id)
+                remote_pending.append(scene.order)
+                continue
             retry_count = latest_job.retry_count + 1 if latest_job and latest_job.status == "FAILED" else 0
             job = submit_video_job(scene, prompt, preferred, self.db, retry_count=retry_count)
             job_ids.append(job.id)
             self.run.current_job_id = job.id
             self.run.current_operation = f"Generating video for scene {scene.order}"
             self.db.commit()
+            if remote_mode:
+                enqueue_generation_job(job, self.db)
+                remote_pending.append(scene.order)
+                continue
             await run_video_job(job.id)
             self.db.expire_all()
             job = self.db.get(GenerationJob, job.id)
@@ -565,6 +646,12 @@ class ProjectWorkflow:
                 StockMediaService.select_asset(asset, scene, self.db)
             else:
                 waiting.append(scene.order)
+        if remote_pending:
+            return StepOutcome(
+                "WAITING",
+                f"Remote video jobs queued for scenes {', '.join(map(str, remote_pending))}",
+                {"job_ids": job_ids, "remote": True},
+            )
         if waiting:
             return StepOutcome(
                 "WAITING", f"Review/select video media for scenes {', '.join(map(str, waiting))}, then resume"

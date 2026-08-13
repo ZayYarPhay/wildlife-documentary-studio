@@ -22,6 +22,7 @@ from app.db.base import (
     TimelineItem,
     TranscriptSegment,
     VoiceTrack,
+    WorkerJob,
     WorkflowRun,
     WorkflowStep,
 )
@@ -45,6 +46,7 @@ _registered_models = (
     TimelineItem,
     TranscriptSegment,
     VoiceTrack,
+    WorkerJob,
     WorkflowRun,
     WorkflowStep,
 )

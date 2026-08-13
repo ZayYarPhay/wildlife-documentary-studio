@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 10 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing using either manual editors or a resumable one-click workflow.
+Phase 11 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing using either manual editors or a resumable one-click workflow, with optional expensive generation on a separate worker host.
 
 ## Architecture
 
@@ -304,6 +304,36 @@ The default AUTO policy approves generated research and script versions, selects
 - `POST /api/workflows/{run_id}/retry`
 - `POST /api/workflows/{run_id}/cancel`
 
+## Phase 11 scope
+
+- Configurable `local` or separate `worker` execution for AI image/video generation
+- Persistent backend `WorkerJob` queue linked one-to-one with existing generation jobs
+- Strict normalized/discriminated job payloads with job/project/scene IDs, prompts, bounded parameters and input asset IDs
+- Bearer-token authenticated claim, progress, input-download, completion and failure protocol
+- Whitelisted `AI_IMAGE` and `AI_VIDEO` job types only
+- Atomic claim attempts, worker identity ownership, renewable leases and expired-lease requeue
+- Authenticated asset-ID downloads; backend filesystem paths are never sent to workers
+- Backend-controlled result filenames, size limits, image verification/dimension checks and FFprobe video validation
+- Durable worker/result diagnostics and idempotent duplicate result delivery
+- AUTO workflow pause while remote work runs and automatic resume when valid results arrive
+- Remote worker failure propagation to the current workflow step for explicit retry
+- Standalone polling mock worker with an independent `/health` endpoint
+- Worker Dockerfile and generic Docker Compose/rented-GPU deployment direction
+- Backend remains fully usable when no GPU worker is online; queued jobs wait safely
+
+Keep `GENERATION_EXECUTION_MODE=local` for the original in-process development behavior. Set it to `worker`, configure the same non-default `WORKER_AUTH_TOKEN` on backend and worker, and start `python -m worker.worker`. The included worker produces deterministic mock assets; it demonstrates the complete separate-process trust and lifecycle boundary, not a production diffusion/video model.
+
+### Worker API
+
+- `GET /api/worker/queue/health`
+- `POST /api/worker/jobs/claim`
+- `POST /api/worker/jobs/{job_id}/progress`
+- `POST /api/worker/jobs/{job_id}/complete`
+- `POST /api/worker/jobs/{job_id}/fail`
+- `GET /api/worker/assets/{asset_id}`
+
+All worker API routes require `Authorization: Bearer <WORKER_AUTH_TOKEN>`.
+
 ## Known limitations
 
-Authentication, a distributed queue/GPU worker, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 10 uses FastAPI in-process background tasks; workflow state survives restart and can resume, but an interrupted provider call does not continue mid-call. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Users must confirm that uploaded audio licenses permit the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.
+Authentication for end users, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 11's queue is database-backed and artifact transport is authenticated HTTP; production scale should use a dedicated broker plus short-lived object-storage URLs. Local workflow tasks still use FastAPI in-process background tasks. Workflow state survives restart and can resume, but an interrupted local provider call does not continue mid-call. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Users must confirm that uploaded audio licenses permit the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video, worker and transcription providers are development substitutes, not production AI output.

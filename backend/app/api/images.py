@@ -21,6 +21,11 @@ from app.services.image_generation import (
     run_image_job,
     submit_image_job,
 )
+from app.services.worker_queue import (
+    cancel_worker_job,
+    enqueue_generation_job,
+    worker_mode_enabled,
+)
 
 router = APIRouter(tags=["images"])
 DatabaseSession = Annotated[Session, Depends(get_db)]
@@ -125,7 +130,10 @@ def generate_image(
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    background_tasks.add_task(run_image_job, job.id)
+    if worker_mode_enabled():
+        enqueue_generation_job(job, db)
+    else:
+        background_tasks.add_task(run_image_job, job.id)
     return job
 
 
@@ -154,7 +162,10 @@ def retry_image_job(
         reference_asset_ids=list(old_job.request_json.get("reference_asset_ids", [])),
         retry_count=old_job.retry_count + 1,
     )
-    background_tasks.add_task(run_image_job, job.id)
+    if worker_mode_enabled():
+        enqueue_generation_job(job, db)
+    else:
+        background_tasks.add_task(run_image_job, job.id)
     return job
 
 
@@ -166,6 +177,7 @@ def cancel_image_job(job_id: int, db: DatabaseSession) -> GenerationJob:
     if job.status not in {"PENDING", "RUNNING"}:
         raise HTTPException(status_code=409, detail="Only pending or running jobs can be canceled")
     job.status = "CANCELED"
+    cancel_worker_job(job.id, db)
     db.commit()
     db.refresh(job)
     return job

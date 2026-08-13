@@ -22,6 +22,7 @@ from app.services.video_generation import (
     run_video_job,
     submit_video_job,
 )
+from app.services.worker_queue import enqueue_generation_job, worker_mode_enabled
 
 router = APIRouter(tags=["videos"])
 DatabaseSession = Annotated[Session, Depends(get_db)]
@@ -142,7 +143,10 @@ def generate_video(
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    background_tasks.add_task(run_video_job, job.id)
+    if worker_mode_enabled():
+        enqueue_generation_job(job, db)
+    else:
+        background_tasks.add_task(run_video_job, job.id)
     return job
 
 
@@ -175,7 +179,10 @@ def retry_video_job(
         fps=old.request_json.get("fps"),
         retry_count=old.retry_count + 1,
     )
-    background_tasks.add_task(run_video_job, job.id)
+    if worker_mode_enabled():
+        enqueue_generation_job(job, db)
+    else:
+        background_tasks.add_task(run_video_job, job.id)
     return job
 
 

@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     audio_upload_max_bytes: int = 536_870_912
     timeline_fps: int = 24
     timeline_gap_tolerance_seconds: float = 0.05
+    generation_execution_mode: str = "local"
+    worker_auth_token: str = "change-me-in-production"
+    worker_lease_seconds: int = 300
+    worker_result_max_bytes: int = 1_073_741_824
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
