@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     thumbnail_width: int = 1280
     thumbnail_height: int = 720
     thumbnail_max_retries: int = 2
-    cors_origins: list[str] = ["http://localhost:3000"]
+    cors_origins: list[str] = ["http://localhost:3200", "http://127.0.0.1:3200"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

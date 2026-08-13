@@ -5,7 +5,7 @@ title Wildlife Documentary Studio Launcher
 set "ROOT=%~dp0"
 set "BACKEND_DIR=%ROOT%backend"
 set "FRONTEND_DIR=%ROOT%frontend"
-set "APP_URL=http://localhost:3000"
+set "APP_URL=http://localhost:3200"
 
 echo.
 echo ============================================================
@@ -75,15 +75,15 @@ if errorlevel 1 (
   echo       Backend is already running on port 8000.
 )
 
-powershell -NoProfile -Command "try { $r=Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:3000' -TimeoutSec 2; if ($r.StatusCode -lt 500) { exit 0 } } catch {}; exit 1" >nul 2>nul
+powershell -NoProfile -Command "try { $r=Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:3200' -TimeoutSec 2; if ($r.StatusCode -lt 500) { exit 0 } } catch {}; exit 1" >nul 2>nul
 if errorlevel 1 (
-  start "WDS Frontend" /min /D "%FRONTEND_DIR%" cmd /k "npm.cmd run dev"
+  start "WDS Frontend" /min /D "%FRONTEND_DIR%" cmd /k "npm.cmd run dev -- -p 3200"
 ) else (
-  echo       Frontend is already running on port 3000.
+  echo       Frontend is already running on port 3200.
 )
 
 echo [5/5] Waiting for the app to become ready...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline=(Get-Date).AddSeconds(60); do { try { $r=Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:3000' -TimeoutSec 2; if ($r.StatusCode -lt 500) { exit 0 } } catch {}; Start-Sleep -Milliseconds 750 } while ((Get-Date) -lt $deadline); exit 1" >nul 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline=(Get-Date).AddSeconds(60); do { try { $r=Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:3200' -TimeoutSec 2; if ($r.StatusCode -lt 500) { exit 0 } } catch {}; Start-Sleep -Milliseconds 750 } while ((Get-Date) -lt $deadline); exit 1" >nul 2>nul
 if errorlevel 1 goto :startup_timeout
 
 echo.
