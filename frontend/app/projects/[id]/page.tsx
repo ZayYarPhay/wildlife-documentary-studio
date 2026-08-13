@@ -7,6 +7,7 @@ import { ResearchPanel } from "@/components/research-panel";
 import { ScriptPanel } from "@/components/script-panel";
 import { ScenesPanel } from "@/components/scenes-panel";
 import { MediaPanel } from "@/components/media-panel";
+import { ImageGenerationPanel } from "@/components/image-generation-panel";
 import { api } from "@/lib/api";
 import { Project } from "@/types/project";
 
@@ -53,7 +54,7 @@ export default function ProjectDetails() {
     {activeTab === "Research" && <ResearchPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Script" && <ScriptPanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Scenes" && <ScenesPanel projectId={project.id} onProjectChanged={reloadProject} />}
-    {activeTab === "Media" && <MediaPanel projectId={project.id} onProjectChanged={reloadProject} />}
+    {activeTab === "Media" && <><MediaPanel projectId={project.id} onProjectChanged={reloadProject} /><ImageGenerationPanel projectId={project.id} onProjectChanged={reloadProject} /></>}
     {!['Research', 'Script', 'Scenes', 'Media'].includes(activeTab) && <div className="empty future-tab"><h2>{activeTab}</h2><p>This workflow becomes available in a later roadmap phase.</p></div>}
   </>;
 }

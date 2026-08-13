@@ -44,7 +44,7 @@ class MediaAsset(Base):
     type: Mapped[MediaAssetType] = mapped_column(Enum(MediaAssetType))
     preview_url: Mapped[str] = mapped_column(String(2000))
     download_url: Mapped[str | None] = mapped_column(String(2000), nullable=True)
-    source_page_url: Mapped[str] = mapped_column(String(2000))
+    source_page_url: Mapped[str | None] = mapped_column(String(2000), nullable=True)
     creator: Mapped[str | None] = mapped_column(String(300), nullable=True)
     license: Mapped[str | None] = mapped_column(String(500), nullable=True)
     attribution_requirements: Mapped[str | None] = mapped_column(String(1000), nullable=True)

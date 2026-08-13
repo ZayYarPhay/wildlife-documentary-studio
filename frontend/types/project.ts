@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -117,7 +117,7 @@ export type MediaAsset = {
   type: "STOCK_VIDEO" | "STOCK_IMAGE" | "AI_IMAGE" | "AI_VIDEO" | "AUDIO" | "MUSIC" | "SFX";
   preview_url: string;
   download_url: string | null;
-  source_page_url: string;
+  source_page_url: string | null;
   creator: string | null;
   license: string | null;
   attribution_requirements: string | null;
@@ -137,6 +137,35 @@ export type StockSearchBundle = {
   is_mock: boolean;
   queries: string[];
   selected_asset_id: number | null;
+  assets: MediaAsset[];
+  warning: string | null;
+};
+
+export type GenerationJob = {
+  id: number;
+  project_id: number;
+  scene_id: number | null;
+  job_type: string;
+  provider: string;
+  status: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
+  progress: number;
+  retry_count: number;
+  prompt_id: number | null;
+  output_asset_id: number | null;
+  seed: number | null;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  completed_at: string | null;
+};
+
+export type ImageGenerationBundle = {
+  scene_id: number;
+  provider: string;
+  is_mock: boolean;
+  selected_asset_id: number | null;
+  prompts: ScenePrompt[];
+  jobs: GenerationJob[];
   assets: MediaAsset[];
   warning: string | null;
 };

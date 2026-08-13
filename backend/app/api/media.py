@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.config import get_settings
 from app.db.session import get_db
-from app.models.media import MediaAsset
+from app.models.media import MediaAsset, MediaAssetType
 from app.models.scene import Scene
 from app.schemas.media import MediaAssetRead, StockSearchBundle
 from app.services.stock_media import StockMediaService, build_stock_queries
@@ -35,7 +35,10 @@ def bundle(scene: Scene, db: Session) -> StockSearchBundle:
     assets = list(
         db.scalars(
             select(MediaAsset)
-            .where(MediaAsset.scene_id == scene.id)
+            .where(
+                MediaAsset.scene_id == scene.id,
+                MediaAsset.type.in_([MediaAssetType.STOCK_VIDEO, MediaAssetType.STOCK_IMAGE]),
+            )
             .order_by(MediaAsset.relevance_score.desc(), MediaAsset.id)
         )
     )

@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 4 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes and ranked stock-media selection while keeping providers replaceable.
+Phase 5 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes, ranked stock-media selection and provider-neutral AI image generation.
 
 ## Architecture
 
@@ -151,6 +151,32 @@ The default `STOCK_MEDIA_PROVIDER=mock` supplies UI/test placeholders. It delibe
 - `POST /api/media-assets/{asset_id}/select`
 - `POST /api/media-assets/{asset_id}/reject`
 
+## Phase 5 scope
+
+- Provider-neutral image generation through `ImageGenerationProvider`
+- Structured, species-conscious prompts covering behavior, habitat, framing, lighting, realism and visual continuity
+- Negative constraints for anatomy, duplicates, incorrect markings, fantasy features, text/watermarks and impossible habitats
+- Immutable `ScenePrompt` versions for generated and manually edited prompts
+- Background `GenerationJob` lifecycle with pending/running/completed/failed/canceled states, progress and durable diagnostics
+- Retry creates a new job and preserves the failed attempt
+- Optional provider seed persistence and future-ready reference asset IDs
+- Local 16:9 production-resolution image and preview persistence
+- Regeneration history that never overwrites an approved image
+- Prompt editor, generation status/history, retry, preview download and approve/select controls in the Media tab
+- AI image generation is limited to `AI_IMAGE_MOTION` and `AI_VIDEO` fallback scenes; no video generation yet
+
+The default `IMAGE_GENERATION_PROVIDER=mock` creates deterministic local PNG placeholders so the full job and review workflow works without an API key. These files are explicitly marked as mock and are not production AI artwork. Add a real provider adapter without changing the core job, prompt or asset logic.
+
+### AI-image API
+
+- `GET /api/scenes/{scene_id}/images`
+- `POST /api/scenes/{scene_id}/image-prompts/generate`
+- `POST /api/scenes/{scene_id}/image-prompts`
+- `POST /api/scenes/{scene_id}/images/generate`
+- `POST /api/image-jobs/{job_id}/retry`
+- `POST /api/image-jobs/{job_id}/cancel`
+- `POST /api/media-assets/{asset_id}/select`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock credentials, AI media generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Phase 4 stores stock metadata and selection only; it does not download footage or generate visual media.
+Authentication, real web retrieval/LLM/stock/image credentials, AI video generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Stock selection remains metadata-only; only Phase 5 mock image output is written locally.

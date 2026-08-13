@@ -17,7 +17,7 @@ class MediaAssetRead(BaseModel):
     type: MediaAssetType
     preview_url: HttpUrl
     download_url: HttpUrl | None
-    source_page_url: HttpUrl
+    source_page_url: HttpUrl | None
     creator: str | None
     license: str | None
     attribution_requirements: str | None

@@ -5,8 +5,10 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.api.images import router as images_router
 from app.api.media import router as media_router
 from app.api.projects import router as projects_router
 from app.api.research import router as research_router
@@ -28,6 +30,7 @@ async def lifespan(_: FastAPI):
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, lifespan=lifespan)
+app.mount("/media", StaticFiles(directory=settings.media_root, check_dir=False), name="media")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -40,6 +43,7 @@ app.include_router(research_router)
 app.include_router(scripts_router)
 app.include_router(scenes_router)
 app.include_router(media_router)
+app.include_router(images_router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -21,6 +21,8 @@ class ProjectStatus(str, enum.Enum):
     SCENE_REVIEW = "SCENE_REVIEW"
     MEDIA_SEARCH = "MEDIA_SEARCH"
     MEDIA_REVIEW = "MEDIA_REVIEW"
+    IMAGE_GENERATING = "IMAGE_GENERATING"
+    IMAGE_REVIEW = "IMAGE_REVIEW"
     FAILED = "FAILED"
 
 
@@ -34,6 +36,8 @@ class ProjectPhase(str, enum.Enum):
     SCENE_REVIEW = "SCENE_REVIEW"
     MEDIA = "MEDIA"
     MEDIA_REVIEW = "MEDIA_REVIEW"
+    IMAGES = "IMAGES"
+    IMAGE_REVIEW = "IMAGE_REVIEW"
 
 
 class Project(Base):

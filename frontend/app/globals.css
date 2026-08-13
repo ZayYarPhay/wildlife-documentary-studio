@@ -25,6 +25,7 @@ p { color:var(--muted); line-height:1.6; }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 label { display:grid; gap:8px; color:#39443d; font-size:13px; font-weight:700; }
 input,select { width:100%; padding:13px 14px; background:white; border:1px solid var(--line); border-radius:10px; font:inherit; }
+textarea { width:100%; padding:13px 14px; background:white; border:1px solid var(--line); border-radius:10px; font:inherit; line-height:1.5; resize:vertical; }
 .wide { grid-column:1/-1; }
 .toggle { display:flex; align-items:center; gap:10px; }
 .toggle input { width:auto; }
@@ -90,4 +91,18 @@ input,select { width:100%; padding:13px 14px; background:white; border:1px solid
 .score { min-width:46px; height:46px; display:grid; place-items:center; border-radius:50%; background:#e4eddc; color:var(--green); font-weight:800; }
 .stock-body small { display:block; color:var(--muted); margin:8px 0; }
 .source-link { display:inline-block; color:var(--green); font-weight:700; font-size:13px; margin-top:8px; }
+.image-studio { border-top:1px solid var(--line); padding-top:48px; }
+.image-workspace { display:grid; grid-template-columns:minmax(340px,1.15fr) 1fr; gap:20px; align-items:start; }
+.prompt-editor label { margin-top:16px; }
+.job-list { display:grid; gap:10px; }
+.job-card { padding:16px; }
+.job-card>div:first-child { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.job-card small { display:block; color:var(--muted); line-height:1.5; }
+.job-progress { height:7px; overflow:hidden; border-radius:99px; background:#e5e8e3; margin:12px 0; }
+.job-progress span { display:block; height:100%; background:var(--green); transition:width .2s ease; }
+.job-card.failed { border-left:4px solid #9b2c2c; }
+.job-card.completed { border-left:4px solid var(--green); }
+.generation-title { margin-top:32px; }
+.image-preview { height:240px; }
 @media (max-width:700px) { .hero,.details,.section-heading,.media-scene-picker { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid,.scene-fields { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } .duration-bar,.script-toolbar { align-items:flex-start; flex-direction:column; } }
+@media (max-width:900px) { .image-workspace { grid-template-columns:1fr; } }

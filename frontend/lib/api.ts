@@ -1,4 +1,4 @@
-import { DocumentaryScript, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScriptBundle, ScriptSection, StockSearchBundle } from "@/types/project";
+import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, ScriptBundle, ScriptSection, StockSearchBundle } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -53,4 +53,10 @@ export const api = {
   searchStock: (sceneId: number) => request<StockSearchBundle>(`/api/scenes/${sceneId}/stock/search`, {method:"POST"}),
   selectMediaAsset: (assetId: number) => request<MediaAsset>(`/api/media-assets/${assetId}/select`, {method:"POST"}),
   rejectMediaAsset: (assetId: number) => request<MediaAsset>(`/api/media-assets/${assetId}/reject`, {method:"POST"}),
+  getImages: (sceneId: number) => request<ImageGenerationBundle>(`/api/scenes/${sceneId}/images`),
+  generateImagePrompt: (sceneId: number) => request<ScenePrompt>(`/api/scenes/${sceneId}/image-prompts/generate`, {method:"POST"}),
+  saveImagePrompt: (sceneId: number, payload: {image_prompt:string;negative_prompt:string}) => request<ScenePrompt>(`/api/scenes/${sceneId}/image-prompts`, {method:"POST",body:JSON.stringify(payload)}),
+  generateImage: (sceneId: number, payload: {prompt_id:number;seed?:number}) => request<GenerationJob>(`/api/scenes/${sceneId}/images/generate`, {method:"POST",body:JSON.stringify(payload)}),
+  retryImageJob: (jobId: number) => request<GenerationJob>(`/api/image-jobs/${jobId}/retry`, {method:"POST"}),
+  cancelImageJob: (jobId: number) => request<GenerationJob>(`/api/image-jobs/${jobId}/cancel`, {method:"POST"}),
 };

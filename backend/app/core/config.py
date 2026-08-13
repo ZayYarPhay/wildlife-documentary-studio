@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     stock_search_timeout_seconds: int = 30
     stock_download_on_select: bool = False
     stock_max_download_bytes: int = 1_073_741_824
+    image_generation_provider: str = "mock"
+    image_generation_timeout_seconds: int = 120
+    public_media_base_url: str = "http://localhost:8000/media"
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
