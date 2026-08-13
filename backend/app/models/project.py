@@ -30,6 +30,7 @@ class ProjectStatus(str, enum.Enum):
     VOICE_APPLIED = "VOICE_APPLIED"
     TIMELINE_BUILDING = "TIMELINE_BUILDING"
     TIMELINE_REVIEW = "TIMELINE_REVIEW"
+    AUDIO_REVIEW = "AUDIO_REVIEW"
     FAILED = "FAILED"
 
 
@@ -51,6 +52,8 @@ class ProjectPhase(str, enum.Enum):
     VOICE_REVIEW = "VOICE_REVIEW"
     TIMELINE = "TIMELINE"
     TIMELINE_REVIEW = "TIMELINE_REVIEW"
+    AUDIO = "AUDIO"
+    AUDIO_REVIEW = "AUDIO_REVIEW"
 
 
 class Project(Base):

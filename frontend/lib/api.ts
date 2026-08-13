@@ -1,4 +1,4 @@
-import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
+import { AudioBundle, AudioSettings, DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -81,4 +81,12 @@ export const api = {
   buildTimeline: (projectId: number) => request<TimelineBundle>(`/api/projects/${projectId}/timeline/build`, {method:"POST"}),
   updateTimelineItem: (itemId: number, payload: Partial<Pick<TimelineItem,"start_time"|"end_time"|"source_in"|"source_out"|"transition"|"effect">>) => request<TimelineItem>(`/api/timeline-items/${itemId}`, {method:"PATCH",body:JSON.stringify(payload)}),
   validateTimeline: (timelineId: number) => request<Timeline>(`/api/timelines/${timelineId}/validate`, {method:"POST"}),
+  getAudio: (projectId: number) => request<AudioBundle>(`/api/projects/${projectId}/audio`),
+  updateAudioSettings: (projectId: number, payload: Omit<AudioSettings,"id"|"project_id">) => request<AudioBundle>(`/api/projects/${projectId}/audio/settings`, {method:"PATCH",body:JSON.stringify(payload)}),
+  uploadAudioAsset: async (projectId: number, form: FormData) => {
+    const response = await fetch(`${API_URL}/api/projects/${projectId}/audio/assets`, {method:"POST",body:form});
+    const body = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(body?.error?.message ?? body?.detail ?? "Audio upload failed");
+    return body as AudioBundle;
+  },
 };

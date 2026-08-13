@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 8 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment and deterministic timeline planning.
+Phase 9 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing.
 
 ## Architecture
 
@@ -233,7 +233,7 @@ The default `TRANSCRIPTION_PROVIDER=mock` uses the approved scene narration to g
 ## Phase 8 scope
 
 - Versioned `Timeline` and ordered `TimelineItem` persistence
-- Track architecture for VISUAL, VOICE, MUSIC, AMBIENT and SUBTITLE; Phase 8 only populates visual and voice
+- Track architecture for VISUAL, VOICE, MUSIC, AMBIENT and SUBTITLE; Phase 8 establishes visual and voice planning
 - Deterministic timeline building from applied voice duration, scene timing and each scene's selected media
 - Selected video trim/loop planning, exact scale/crop and FPS normalization metadata
 - Selected still-image duration filling with a subtle centered Ken Burns zoom/pan, preserved aspect ratio and no black borders
@@ -243,7 +243,7 @@ The default `TRANSCRIPTION_PROVIDER=mock` uses the approved scene narration to g
 - Provider-independent intermediate JSON render plan rather than one monolithic FFmpeg command
 - Logged FFmpeg item runner with captured stderr and clear failure diagnostics
 - Ordered track visualization, source previews, warnings, timing/transition edits, validation and rebuild/version controls
-- No polished final export, subtitles, music or ambient mix yet
+- No polished final export yet
 
 Timeline validity requires one voice item covering the voice-over exactly and contiguous visual coverage for the same duration. Rebuilding creates a new immutable timeline version; manual edits affect only the selected version and never rewrite scene media or narration.
 
@@ -254,6 +254,29 @@ Timeline validity requires one voice item covering the voice-over exactly and co
 - `PATCH /api/timeline-items/{item_id}`
 - `POST /api/timelines/{timeline_id}/validate`
 
+## Phase 9 scope
+
+- Timestamp-preserving UTF-8 SRT generation from the applied voice transcript
+- Export-only subtitle overlays: source media remains untouched
+- Configurable subtitle enablement, font size, top/middle/bottom position, outline, background and safe margin
+- Secure WAV/MP3/M4A upload for project music and per-scene ambient sound
+- Required source/creator and license metadata for every uploaded music or ambient asset
+- Music enablement, volume, fade-in/fade-out and automatic voice side-chain ducking controls
+- Optional per-scene ambience with an independent low-volume control
+- Deterministic FFmpeg audio filter plan using voice loudness normalization, music ducking, mixing and a true-peak limiter
+- Persistent `AudioAsset` and project-level `AudioSettings` records
+- Timeline MUSIC, AMBIENT and SUBTITLE items plus downloadable current SRT
+- Subtitle preview, licensed-audio uploader/selector, audio previews and mix-plan inspection in the Timeline tab
+
+Subtitles are not permanently burned into source clips. The SRT path, subtitle style and audio filter are saved in the intermediate render plan for the later export phase. Voice is normalized to a `-16 LUFS` target with a `-1.5 dB` true-peak target; the mixed output also uses a `0.95` limiter. These deterministic defaults are starting points and should still be reviewed with real narration and music.
+
+### Subtitle and audio API
+
+- `GET /api/projects/{project_id}/audio`
+- `PATCH /api/projects/{project_id}/audio/settings`
+- `POST /api/projects/{project_id}/audio/assets`
+- `GET /api/timelines/{timeline_id}/subtitles.srt`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock/image/video/transcription credentials, subtitles/audio mixing and final polished rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.
+Authentication, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Uploaded users must confirm that their audio license permits the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video and transcription providers are development substitutes, not production AI output.

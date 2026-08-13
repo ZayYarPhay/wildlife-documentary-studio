@@ -129,7 +129,8 @@ def test_complete_timeline_duration_image_effect_and_video_trim(client):
     assert len(voices) == 1 and voices[0]["end_time"] == 120
     assert timeline["render_plan_json"]["tracks"]["MUSIC"] == []
     assert timeline["render_plan_json"]["tracks"]["AMBIENT"] == []
-    assert timeline["render_plan_json"]["tracks"]["SUBTITLE"] == []
+    assert len(timeline["render_plan_json"]["tracks"]["SUBTITLE"]) > 0
+    assert timeline["render_plan_json"]["subtitles"]["style"]["burn_in"] == "EXPORT_ONLY"
 
 
 def test_missing_first_visual_is_detected(client):

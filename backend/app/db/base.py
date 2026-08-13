@@ -8,6 +8,8 @@ from app.models.timeline import Timeline, TimelineItem
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack
 
 __all__ = [
+    "AudioAsset",
+    "AudioSettings",
     "GenerationJob",
     "MediaAsset",
     "Project",
@@ -24,3 +26,4 @@ __all__ = [
     "TranscriptSegment",
     "VoiceTrack",
 ]
+from app.models.audio import AudioAsset, AudioSettings

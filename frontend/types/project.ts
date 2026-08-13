@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "AUDIO_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW" | "AUDIO" | "AUDIO_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -264,6 +264,50 @@ export type TimelineBundle = {
   project_id: number;
   current: Timeline | null;
   versions: Timeline[];
+};
+
+export type AudioAsset = {
+  id: number;
+  project_id: number;
+  scene_id: number | null;
+  kind: "MUSIC" | "AMBIENT";
+  public_url: string;
+  original_filename: string;
+  mime_type: string;
+  size_bytes: number;
+  duration: number;
+  source_name: string;
+  source_url: string | null;
+  license: string;
+  attribution: string | null;
+  created_at: string;
+};
+
+export type AudioSettings = {
+  id: number;
+  project_id: number;
+  subtitles_enabled: boolean;
+  subtitle_font_size: number;
+  subtitle_position: "TOP" | "MIDDLE" | "BOTTOM";
+  subtitle_outline: boolean;
+  subtitle_background: boolean;
+  subtitle_safe_margin: number;
+  music_enabled: boolean;
+  music_asset_id: number | null;
+  music_volume: number;
+  music_fade_in: number;
+  music_fade_out: number;
+  ducking_ratio: number;
+  ambient_enabled: boolean;
+  ambient_volume: number;
+};
+
+export type AudioBundle = {
+  project_id: number;
+  settings: AudioSettings;
+  assets: AudioAsset[];
+  srt_url: string | null;
+  mix_plan: Record<string, unknown>;
 };
 
 export type SceneBundle = {

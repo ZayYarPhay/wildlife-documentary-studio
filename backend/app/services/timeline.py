@@ -206,8 +206,11 @@ def build_timeline(project: Project, db: Session) -> Timeline:
     )
     db.flush()
     validate_timeline(timeline, db, warnings)
-    project.status = ProjectStatus.TIMELINE_REVIEW
-    project.current_phase = ProjectPhase.TIMELINE_REVIEW
+    from app.services.audio import apply_audio_to_timeline
+
+    apply_audio_to_timeline(timeline, db)
+    project.status = ProjectStatus.AUDIO_REVIEW
+    project.current_phase = ProjectPhase.AUDIO_REVIEW
     db.commit()
     return load_timeline(timeline.id, db)
 
@@ -296,7 +299,10 @@ def validate_timeline(
         )
     timeline.warnings_json = _deduplicate_warnings(warnings)
     timeline.valid = not any(item.get("severity") == "ERROR" for item in timeline.warnings_json)
-    timeline.render_plan_json = build_render_plan(timeline, items)
+    plan = build_render_plan(timeline, items)
+    from app.services.audio import enrich_render_plan
+
+    timeline.render_plan_json = enrich_render_plan(timeline, db, plan)
     db.flush()
     return timeline
 
@@ -318,6 +324,9 @@ def build_render_plan(timeline: Timeline, items: list[TimelineItem]) -> dict[str
                 "effect": item.effect,
                 "operations": item.metadata_json.get("operations", []),
                 "source_path": item.metadata_json.get("source_path"),
+                "text": item.metadata_json.get("text"),
+                "volume": item.metadata_json.get("volume"),
+                "license": item.metadata_json.get("license"),
             }
         )
     return {

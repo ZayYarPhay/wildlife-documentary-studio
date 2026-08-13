@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.api.audio import router as audio_router
 from app.api.images import router as images_router
 from app.api.media import router as media_router
 from app.api.projects import router as projects_router
@@ -50,6 +51,7 @@ app.include_router(images_router)
 app.include_router(videos_router)
 app.include_router(voice_router)
 app.include_router(timelines_router)
+app.include_router(audio_router)
 
 
 @app.exception_handler(RequestValidationError)

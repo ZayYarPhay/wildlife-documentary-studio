@@ -1,3 +1,4 @@
+from app.models.audio import AudioAsset, AudioAssetKind, AudioSettings
 from app.models.jobs import GenerationJob, RenderJob
 from app.models.media import MediaAsset, MediaAssetStatus, MediaAssetType
 from app.models.project import Project, ProjectPhase, ProjectStatus
@@ -8,6 +9,9 @@ from app.models.timeline import Timeline, TimelineItem, TimelineTrack
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack, VoiceTrackStatus
 
 __all__ = [
+    "AudioAsset",
+    "AudioAssetKind",
+    "AudioSettings",
     "GenerationJob",
     "MediaAsset",
     "MediaAssetStatus",
