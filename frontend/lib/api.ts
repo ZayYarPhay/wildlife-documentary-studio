@@ -1,4 +1,4 @@
-import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, ScriptBundle, ScriptSection, StockSearchBundle } from "@/types/project";
+import { DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, ScriptBundle, ScriptSection, StockSearchBundle, VideoGenerationBundle } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -59,4 +59,10 @@ export const api = {
   generateImage: (sceneId: number, payload: {prompt_id:number;seed?:number}) => request<GenerationJob>(`/api/scenes/${sceneId}/images/generate`, {method:"POST",body:JSON.stringify(payload)}),
   retryImageJob: (jobId: number) => request<GenerationJob>(`/api/image-jobs/${jobId}/retry`, {method:"POST"}),
   cancelImageJob: (jobId: number) => request<GenerationJob>(`/api/image-jobs/${jobId}/cancel`, {method:"POST"}),
+  getVideos: (sceneId: number) => request<VideoGenerationBundle>(`/api/scenes/${sceneId}/videos`),
+  generateVideoPrompt: (sceneId: number) => request<ScenePrompt>(`/api/scenes/${sceneId}/video-prompts/generate`, {method:"POST"}),
+  saveVideoPrompt: (sceneId: number, videoPrompt: string) => request<ScenePrompt>(`/api/scenes/${sceneId}/video-prompts`, {method:"POST",body:JSON.stringify({video_prompt:videoPrompt})}),
+  generateVideo: (sceneId: number, payload: {prompt_id:number;source_asset_id:number;duration?:number;fps?:number}) => request<GenerationJob>(`/api/scenes/${sceneId}/videos/generate`, {method:"POST",body:JSON.stringify(payload)}),
+  retryVideoJob: (jobId: number) => request<GenerationJob>(`/api/video-jobs/${jobId}/retry`, {method:"POST"}),
+  chooseVideoFallback: (sceneId: number, strategy: "AI_IMAGE_MOTION"|"STOCK_VIDEO") => request<VideoGenerationBundle>(`/api/scenes/${sceneId}/video-fallback`, {method:"POST",body:JSON.stringify({strategy})}),
 };

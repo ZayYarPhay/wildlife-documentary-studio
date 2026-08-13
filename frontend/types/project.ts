@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW";
   created_at: string;
   updated_at: string;
 };
@@ -167,6 +167,19 @@ export type ImageGenerationBundle = {
   prompts: ScenePrompt[];
   jobs: GenerationJob[];
   assets: MediaAsset[];
+  warning: string | null;
+};
+
+export type VideoGenerationBundle = {
+  scene_id: number;
+  provider: string;
+  is_mock: boolean;
+  selected_asset_id: number | null;
+  selected_image_asset_id: number | null;
+  prompts: ScenePrompt[];
+  jobs: GenerationJob[];
+  assets: MediaAsset[];
+  fallback_recommendations: ("AI_IMAGE_MOTION" | "STOCK_VIDEO")[];
   warning: string | null;
 };
 

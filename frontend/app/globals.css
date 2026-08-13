@@ -104,5 +104,7 @@ textarea { width:100%; padding:13px 14px; background:white; border:1px solid var
 .job-card.completed { border-left:4px solid var(--green); }
 .generation-title { margin-top:32px; }
 .image-preview { height:240px; }
+.video-settings { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+.video-preview { display:block; width:100%; aspect-ratio:16/9; background:#102018; object-fit:contain; }
 @media (max-width:700px) { .hero,.details,.section-heading,.media-scene-picker { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid,.scene-fields { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } .duration-bar,.script-toolbar { align-items:flex-start; flex-direction:column; } }
 @media (max-width:900px) { .image-workspace { grid-template-columns:1fr; } }

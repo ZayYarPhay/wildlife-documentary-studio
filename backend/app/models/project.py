@@ -23,6 +23,8 @@ class ProjectStatus(str, enum.Enum):
     MEDIA_REVIEW = "MEDIA_REVIEW"
     IMAGE_GENERATING = "IMAGE_GENERATING"
     IMAGE_REVIEW = "IMAGE_REVIEW"
+    VIDEO_GENERATING = "VIDEO_GENERATING"
+    VIDEO_REVIEW = "VIDEO_REVIEW"
     FAILED = "FAILED"
 
 
@@ -38,6 +40,8 @@ class ProjectPhase(str, enum.Enum):
     MEDIA_REVIEW = "MEDIA_REVIEW"
     IMAGES = "IMAGES"
     IMAGE_REVIEW = "IMAGE_REVIEW"
+    VIDEOS = "VIDEOS"
+    VIDEO_REVIEW = "VIDEO_REVIEW"
 
 
 class Project(Base):

@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 5 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes, ranked stock-media selection and provider-neutral AI image generation.
+Phase 6 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It provides persistent projects, reviewable research, versioned narration, timed scenes, ranked stock media and provider-neutral AI image/video generation.
 
 ## Architecture
 
@@ -177,6 +177,33 @@ The default `IMAGE_GENERATION_PROVIDER=mock` creates deterministic local PNG pla
 - `POST /api/image-jobs/{job_id}/cancel`
 - `POST /api/media-assets/{asset_id}/select`
 
+## Phase 6 scope
+
+- Provider-neutral image-to-video generation through `VideoGenerationProvider`
+- Structured motion prompts covering animal pose/action, environment, camera movement, duration and realism constraints
+- Natural species movement guidance and explicit anti-morphing/identity-continuity constraints
+- Approved local AI image required as the video source; arbitrary URLs and unmanaged file paths are rejected
+- Configurable duration, FPS and resolution with provider-specific options isolated in job metadata
+- Background video job lifecycle with progress, durable errors and preserved generation history
+- Real MP4 validation through FFprobe for video stream, duration, resolution and non-empty output
+- Retry limit with diagnostics preserved for every failed attempt
+- Exhausted retries offer explicit `AI_IMAGE_MOTION` and `STOCK_VIDEO` fallbacks without failing the project
+- Video prompt editor, job history, playback preview, retry, fallback selection, download and approve/select UI
+- Regeneration does not replace an already approved clip
+- No final documentary timeline or rendering yet
+
+The default `VIDEO_GENERATION_PROVIDER=mock` uses local FFmpeg to create a deterministic MP4 image hold. It validates the complete provider/job/asset workflow but does not synthesize animal motion. A real image-to-video provider can replace it without changing scene, prompt, job or asset contracts.
+
+### AI-video API
+
+- `GET /api/scenes/{scene_id}/videos`
+- `POST /api/scenes/{scene_id}/video-prompts/generate`
+- `POST /api/scenes/{scene_id}/video-prompts`
+- `POST /api/scenes/{scene_id}/videos/generate`
+- `POST /api/video-jobs/{job_id}/retry`
+- `POST /api/scenes/{scene_id}/video-fallback`
+- `POST /api/media-assets/{asset_id}/select`
+
 ## Known limitations
 
-Authentication, real web retrieval/LLM/stock/image credentials, AI video generation, voice-over, timelines and rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Stock selection remains metadata-only; only Phase 5 mock image output is written locally.
+Authentication, real web retrieval/LLM/stock/image/video credentials, voice-over, timelines and final rendering belong to later roadmap phases and are not implemented yet. Space-delimited word counting is an approximation for languages such as Burmese that require specialized segmentation. Stock selection remains metadata-only; Phase 5/6 mock image and video output is local development media.

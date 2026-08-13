@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     image_generation_provider: str = "mock"
     image_generation_timeout_seconds: int = 120
     public_media_base_url: str = "http://localhost:8000/media"
+    video_generation_provider: str = "mock"
+    video_generation_timeout_seconds: int = 180
+    video_generation_max_retries: int = 1
+    video_generation_fps: int = 24
+    video_generation_max_duration_seconds: float = 10
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
