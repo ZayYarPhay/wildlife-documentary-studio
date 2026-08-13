@@ -177,6 +177,12 @@ textarea { width:100%; padding:13px 14px; background:white; border:1px solid var
 .visual-mix span:nth-child(2) { background:#a2834e; }.visual-mix span:nth-child(3) { background:#536f82; }
 .difficulty-easy { background:#dcebd7; color:#2e6536; }.difficulty-medium { background:#fff0cc; color:#765606; }.difficulty-hard { background:#fde8e8; color:#8a2020; }
 .selected-topic { display:flex; gap:10px; align-items:center; margin-top:14px; padding:12px; border-radius:10px; background:#eaf3e6; }
+.thumbnail-options { display:flex; gap:18px; align-items:end; margin:18px 0; }.thumbnail-options label { flex:1; }
+.thumbnail-concepts,.thumbnail-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+.thumbnail-concepts details { margin-top:14px; color:var(--muted); }.thumbnail-concepts summary { cursor:pointer; color:var(--green); font-weight:800; }
+.thumbnail-result { overflow:hidden; }.thumbnail-result.approved { border-color:var(--green); box-shadow:0 0 0 2px #7fa26433; }
+.thumbnail-image,.thumbnail-placeholder { width:calc(100% + 48px); aspect-ratio:16/9; margin:-24px -24px 18px; background:#17291f center/cover no-repeat; }
+.thumbnail-placeholder { display:grid; place-items:center; color:white; font-weight:800; }
 @media (max-width:700px) { .hero,.details,.section-heading,.media-scene-picker { display:block; } .hero .button,.section-heading .button { margin-top:16px; } .form-grid,.scene-fields { grid-template-columns:1fr; } .wide { grid-column:auto; } .detail-list { grid-template-columns:1fr; } .fact-card { grid-template-columns:1fr; } .fact-side { justify-items:start; } .duration-bar,.script-toolbar { align-items:flex-start; flex-direction:column; } }
 @media (max-width:900px) { .image-workspace { grid-template-columns:1fr; } }
 @media (max-width:900px) { .voice-columns { grid-template-columns:1fr; } .voice-upload,.voice-summary,.voice-apply { align-items:stretch; flex-direction:column; } .voice-summary audio { width:100%; } }
@@ -185,3 +191,4 @@ textarea { width:100%; padding:13px 14px; background:white; border:1px solid var
 @media (max-width:1000px) { .workflow-launch { grid-template-columns:1fr 1fr; }.workflow-steps { grid-template-columns:repeat(2,1fr); } }
 @media (max-width:650px) { .workflow-launch,.workflow-steps { grid-template-columns:1fr; }.workflow-heading { flex-direction:column; } }
 @media (max-width:850px) { .topic-picker-controls { grid-template-columns:1fr; }.topic-card p,.topic-card ul { min-height:0; } }
+@media (max-width:700px) { .thumbnail-options { align-items:stretch; flex-direction:column; } }

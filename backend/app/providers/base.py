@@ -47,3 +47,13 @@ class TopicSuggestionProvider(Provider):
     async def suggest(
         self, category: str, excluded_topics: list[str], count: int, **options: Any
     ) -> list[dict[str, Any]]: ...
+
+
+class ThumbnailProvider(Provider):
+    @abstractmethod
+    async def suggest_concepts(
+        self, topic: str, script_excerpt: str, **options: Any
+    ) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def generate(self, prompt: str, **options: Any) -> dict[str, Any]: ...

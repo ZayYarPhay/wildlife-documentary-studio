@@ -1,4 +1,4 @@
-import { AudioBundle, AudioSettings, DocumentaryScript, ExportBundle, ExportSettings, GenerationJob, ImageGenerationBundle, MediaAsset, PreflightReport, Project, ProjectCreate, ProjectStorageReport, RenderJob, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TopicCategory, TopicSuggestionBundle, TranscriptSegment, VideoGenerationBundle, VisualPreference, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
+import { AudioBundle, AudioSettings, DocumentaryScript, ExportBundle, ExportSettings, GenerationJob, ImageGenerationBundle, MediaAsset, PreflightReport, Project, ProjectCreate, ProjectStorageReport, RenderJob, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, ThumbnailAsset, ThumbnailBundle, Timeline, TimelineBundle, TimelineItem, TopicCategory, TopicSuggestionBundle, TranscriptSegment, VideoGenerationBundle, VisualPreference, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 export const apiUrl = (path: string) => `${API_URL}${path}`;
@@ -107,4 +107,10 @@ export const api = {
   startRender: (projectId: number, settings: ExportSettings) => request<RenderJob>(`/api/projects/${projectId}/export/render`, {method:"POST",body:JSON.stringify(settings)}),
   cancelRender: (jobId: number) => request<RenderJob>(`/api/render-jobs/${jobId}/cancel`, {method:"POST"}),
   retryRender: (jobId: number) => request<RenderJob>(`/api/render-jobs/${jobId}/retry`, {method:"POST"}),
+  getThumbnails: (projectId: number) => request<ThumbnailBundle>(`/api/projects/${projectId}/thumbnails`),
+  generateThumbnailConcepts: (projectId: number) => request<ThumbnailBundle>(`/api/projects/${projectId}/thumbnails/concepts`, {method:"POST"}),
+  generateThumbnails: (projectId: number, payload: {concept_ids?:number[];title_overlay:boolean;overlay_text?:string;seed?:number}) => request<ThumbnailBundle>(`/api/projects/${projectId}/thumbnails/generate`, {method:"POST",body:JSON.stringify(payload)}),
+  approveThumbnail: (assetId: number) => request<ThumbnailAsset>(`/api/thumbnail-assets/${assetId}/approve`, {method:"POST"}),
+  rejectThumbnail: (assetId: number) => request<ThumbnailAsset>(`/api/thumbnail-assets/${assetId}/reject`, {method:"POST"}),
+  retryThumbnail: (assetId: number) => request<ThumbnailAsset>(`/api/thumbnail-assets/${assetId}/retry`, {method:"POST"}),
 };

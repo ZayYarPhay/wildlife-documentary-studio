@@ -117,7 +117,7 @@ def test_duplicate_storage_maintenance_and_safe_delete(client):
     assert copy_data["title"].endswith("(Copy)")
     assert copy_data["status"] == "DRAFT"
     copy_root = Path(get_settings().media_root).resolve() / str(copy_data["id"])
-    copy_root.mkdir(parents=True)
+    copy_root.mkdir(parents=True, exist_ok=True)
     (copy_root / "orphan.tmp").write_text("safe cleanup", encoding="utf-8")
     assert client.delete(f"/api/projects/{copy_data['id']}").status_code == 204
     assert not copy_root.exists()

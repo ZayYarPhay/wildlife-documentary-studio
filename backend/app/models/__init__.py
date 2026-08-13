@@ -5,6 +5,7 @@ from app.models.project import Project, ProjectPhase, ProjectStatus
 from app.models.research import ResearchFact, ResearchSource
 from app.models.scene import Scene, ScenePrompt, SceneStatus, VisualStrategy
 from app.models.script import Script, ScriptSection
+from app.models.thumbnail import ThumbnailAsset, ThumbnailConcept, ThumbnailStatus
 from app.models.timeline import Timeline, TimelineItem, TimelineTrack
 from app.models.voice import SceneVoiceAlignment, TranscriptSegment, VoiceTrack, VoiceTrackStatus
 from app.models.worker import WorkerJob, WorkerJobStatus
@@ -36,6 +37,9 @@ __all__ = [
     "SceneVoiceAlignment",
     "Script",
     "ScriptSection",
+    "ThumbnailAsset",
+    "ThumbnailConcept",
+    "ThumbnailStatus",
     "Timeline",
     "TimelineItem",
     "TimelineTrack",

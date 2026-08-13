@@ -48,6 +48,11 @@ class Settings(BaseSettings):
     topic_suggestion_provider: str = "mock"
     topic_suggestion_timeout_seconds: int = 15
     topic_recent_project_limit: int = 30
+    thumbnail_provider: str = "mock"
+    thumbnail_timeout_seconds: int = 120
+    thumbnail_width: int = 1280
+    thumbnail_height: int = 720
+    thumbnail_max_retries: int = 2
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 12 plus optional Phase 13 application for creating 2–15 minute, source-backed wildlife documentaries. It carries projects from production-aware topic discovery through research, visual generation, voice alignment, timeline planning, audio mixing and a validated final MP4 export.
+Complete Phase 0–12 application with optional Phase 13 topic discovery and Phase 14 thumbnail production. It carries 2–15 minute wildlife projects from production-aware topic selection through source-backed research, visual generation, voice alignment, final MP4 export and an approved documentary thumbnail.
 
 ## Architecture
 
@@ -375,6 +375,30 @@ Stock availability is an estimate until a real stock provider search is run. Top
 - `GET /api/topics/categories`
 - `POST /api/topics/suggest`
 - `POST /api/topics/surprise`
+
+## Optional Phase 14 scope
+
+- Final-export gate: thumbnail work starts only after a completed MP4 exists in managed storage
+- Three versioned concepts derived from the project topic and latest documentary script
+- Provider-neutral `ThumbnailProvider` for concept ideation and raster generation
+- Identity-safe prompts requiring one coherent animal, accurate anatomy/markings, authentic habitat and ethical wildlife imagery
+- Exact 1280×720 PNG validation with default no-text/no-logo/no-watermark constraints
+- Optional backend-controlled title overlay, never silently added by the image provider
+- Independent pending/completed/failed/rejected/approved lifecycle, bounded retry policy and preserved generation history
+- Exactly one approved thumbnail per project plus PNG preview/download
+- Dedicated Thumbnail tab, separate from the final video render and its files
+
+The mock provider creates abstract deterministic lifecycle placeholders, not real wildlife art. Replace it with a production image provider through `ThumbnailProvider`; do not remove output path, size, type, aspect or prompt-safety validation.
+
+### Thumbnail API
+
+- `GET /api/projects/{project_id}/thumbnails`
+- `POST /api/projects/{project_id}/thumbnails/concepts`
+- `POST /api/projects/{project_id}/thumbnails/generate`
+- `POST /api/thumbnail-assets/{asset_id}/retry`
+- `POST /api/thumbnail-assets/{asset_id}/approve`
+- `POST /api/thumbnail-assets/{asset_id}/reject`
+- `GET /api/thumbnail-assets/{asset_id}/download`
 
 ## Known limitations
 

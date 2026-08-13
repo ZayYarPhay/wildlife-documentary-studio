@@ -466,3 +466,43 @@ export type TopicSuggestionBundle = {
   excluded_recent_topics: string[];
   warning: string | null;
 };
+
+export type ThumbnailConcept = {
+  id: number;
+  project_id: number;
+  version: number;
+  concept_order: number;
+  name: string;
+  description: string;
+  prompt: string;
+  negative_prompt: string;
+  created_at: string;
+};
+export type ThumbnailAsset = {
+  id: number;
+  project_id: number;
+  concept_id: number;
+  provider: string;
+  status: "PENDING" | "COMPLETED" | "APPROVED" | "REJECTED" | "FAILED";
+  public_url: string | null;
+  width: number;
+  height: number;
+  seed: number | null;
+  title_overlay: boolean;
+  overlay_text: string | null;
+  retry_count: number;
+  metadata_json: Record<string, unknown>;
+  error_message: string | null;
+  created_at: string;
+  completed_at: string | null;
+};
+export type ThumbnailBundle = {
+  project_id: number;
+  final_render_ready: boolean;
+  provider: string;
+  is_mock: boolean;
+  concepts: ThumbnailConcept[];
+  assets: ThumbnailAsset[];
+  approved_thumbnail_id: number | null;
+  warning: string | null;
+};

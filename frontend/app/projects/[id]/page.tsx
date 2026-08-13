@@ -14,10 +14,11 @@ import { TimelinePanel } from "@/components/timeline-panel";
 import { AudioPanel } from "@/components/audio-panel";
 import { WorkflowPanel } from "@/components/workflow-panel";
 import { ExportPanel } from "@/components/export-panel";
+import { ThumbnailPanel } from "@/components/thumbnail-panel";
 import { api } from "@/lib/api";
 import { Project, ProjectStorageReport } from "@/types/project";
 
-const tabs = ["Research", "Script", "Scenes", "Media", "Voice-over", "Timeline", "Export"];
+const tabs = ["Research", "Script", "Scenes", "Media", "Voice-over", "Timeline", "Export", "Thumbnail"];
 
 export default function ProjectDetails() {
   const { id } = useParams<{ id: string }>();
@@ -71,5 +72,6 @@ export default function ProjectDetails() {
     {activeTab === "Voice-over" && <VoicePanel projectId={project.id} onProjectChanged={reloadProject} />}
     {activeTab === "Timeline" && <><TimelinePanel projectId={project.id} onProjectChanged={reloadProject} /><AudioPanel projectId={project.id} /></>}
     {activeTab === "Export" && <ExportPanel projectId={project.id} onProjectChanged={reloadProject} />}
+    {activeTab === "Thumbnail" && <ThumbnailPanel projectId={project.id} />}
   </>;
 }

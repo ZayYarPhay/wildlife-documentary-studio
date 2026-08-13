@@ -16,6 +16,7 @@ from app.api.projects import router as projects_router
 from app.api.research import router as research_router
 from app.api.scenes import router as scenes_router
 from app.api.scripts import router as scripts_router
+from app.api.thumbnails import router as thumbnails_router
 from app.api.timelines import router as timelines_router
 from app.api.topics import router as topics_router
 from app.api.videos import router as videos_router
@@ -67,6 +68,7 @@ app.include_router(workflow_router)
 app.include_router(worker_router)
 app.include_router(export_router)
 app.include_router(topics_router)
+app.include_router(thumbnails_router)
 
 
 @app.exception_handler(RequestValidationError)
