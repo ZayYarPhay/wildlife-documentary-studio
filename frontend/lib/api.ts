@@ -1,4 +1,4 @@
-import { AudioBundle, AudioSettings, DocumentaryScript, ExportBundle, ExportSettings, GenerationJob, ImageGenerationBundle, MediaAsset, PreflightReport, Project, ProjectCreate, ProjectStorageReport, RenderJob, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
+import { AudioBundle, AudioSettings, DocumentaryScript, ExportBundle, ExportSettings, GenerationJob, ImageGenerationBundle, MediaAsset, PreflightReport, Project, ProjectCreate, ProjectStorageReport, RenderJob, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TopicCategory, TopicSuggestionBundle, TranscriptSegment, VideoGenerationBundle, VisualPreference, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 export const apiUrl = (path: string) => `${API_URL}${path}`;
@@ -27,6 +27,8 @@ export const api = {
   duplicateProject: (id: number) => request<Project>(`/api/projects/${id}/duplicate`, {method:"POST"}),
   getProjectStorage: (id: number) => request<ProjectStorageReport>(`/api/projects/${id}/storage`),
   maintainProjectMedia: (id: number, cleanupUnused: boolean) => request<ProjectStorageReport & {removed_asset_ids:number[];removed_files:number;proxies_created:number}>(`/api/projects/${id}/media/maintenance`, {method:"POST",body:JSON.stringify({cleanup_unused:cleanupUnused})}),
+  suggestTopics: (category: TopicCategory, durationSeconds: number, visualPreference: VisualPreference) => request<TopicSuggestionBundle>("/api/topics/suggest", {method:"POST",body:JSON.stringify({category,count:3,duration_seconds:durationSeconds,visual_preference:visualPreference})}),
+  surpriseTopic: (category: TopicCategory | null, durationSeconds: number, visualPreference: VisualPreference) => request<TopicSuggestionBundle>("/api/topics/surprise", {method:"POST",body:JSON.stringify({category,duration_seconds:durationSeconds,visual_preference:visualPreference})}),
   getResearch: (projectId: number) =>
     request<ResearchBundle>(`/api/projects/${projectId}/research`),
   generateResearch: (projectId: number) =>

@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 12 application for creating 2–15 minute, source-backed wildlife documentaries. It carries projects from research through visual generation, voice alignment, timeline planning, audio mixing and a validated final MP4 export, using manual editors or a resumable one-click workflow with optional generation on a separate worker host.
+Phase 12 plus optional Phase 13 application for creating 2–15 minute, source-backed wildlife documentaries. It carries projects from production-aware topic discovery through research, visual generation, voice alignment, timeline planning, audio mixing and a validated final MP4 export.
 
 ## Architecture
 
@@ -357,6 +357,24 @@ See [`docs/production.md`](docs/production.md) for deployment, queue, storage, b
 - `POST /api/projects/{project_id}/duplicate`
 - `GET /api/projects/{project_id}/storage`
 - `POST /api/projects/{project_id}/media/maintenance`
+
+## Optional Phase 13 scope
+
+- Guided topic discovery across mammals, birds, reptiles, ocean wildlife, insects, rare animals and predators
+- Duration- and production-mode-aware difficulty estimates with transparent reasons
+- Estimated stock-footage availability and a recommended stock/image-motion/AI-video mix
+- Recent project topic avoidance, with reused topics clearly disclosed when the catalog is exhausted
+- Category-aware “Surprise Me” and explicit user selection before project creation
+- Provider-neutral `TopicSuggestionProvider`; the default curated mock catalog requires no key or network call
+- Strict safety boundary: suggestions create no project, research request, generation job or GPU work
+
+Stock availability is an estimate until a real stock provider search is run. Topic suggestions do not assert documentary facts; all factual claims still pass through the source-backed research and approval workflow.
+
+### Topic API
+
+- `GET /api/topics/categories`
+- `POST /api/topics/suggest`
+- `POST /api/topics/surprise`
 
 ## Known limitations
 

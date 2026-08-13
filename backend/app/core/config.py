@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     render_default_crf: int = 20
     render_default_preset: str = "medium"
     job_stale_seconds: int = 900
+    topic_suggestion_provider: str = "mock"
+    topic_suggestion_timeout_seconds: int = 15
+    topic_recent_project_limit: int = 30
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

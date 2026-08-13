@@ -40,3 +40,10 @@ class TranscriptionProvider(Provider):
 class RenderProvider(Provider):
     @abstractmethod
     async def render(self, plan: dict[str, Any], **options: Any) -> dict[str, Any]: ...
+
+
+class TopicSuggestionProvider(Provider):
+    @abstractmethod
+    async def suggest(
+        self, category: str, excluded_topics: list[str], count: int, **options: Any
+    ) -> list[dict[str, Any]]: ...

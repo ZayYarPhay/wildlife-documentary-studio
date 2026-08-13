@@ -444,3 +444,25 @@ export type ProjectCreate = Pick<
   | "output_resolution"
   | "documentary_tone"
 >;
+
+export type TopicCategory = "MAMMALS" | "BIRDS" | "REPTILES" | "OCEAN" | "INSECTS" | "RARE_ANIMALS" | "PREDATORS";
+export type VisualPreference = "ECONOMY" | "BALANCED" | "MAX_AI";
+export type TopicSuggestion = {
+  topic: string;
+  scientific_name: string | null;
+  category: TopicCategory;
+  hook: string;
+  stock_availability: "HIGH" | "MEDIUM" | "LOW";
+  stock_score: number;
+  production_difficulty: "EASY" | "MEDIUM" | "HARD";
+  difficulty_reasons: string[];
+  recommended_visual_mix: {stock:number;ai_image_motion:number;ai_video:number};
+  recently_used: boolean;
+};
+export type TopicSuggestionBundle = {
+  provider: string;
+  is_mock: boolean;
+  suggestions: TopicSuggestion[];
+  excluded_recent_topics: string[];
+  warning: string | null;
+};
