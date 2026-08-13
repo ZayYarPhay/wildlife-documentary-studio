@@ -1,6 +1,6 @@
 # Wildlife Documentary Studio
 
-Phase 11 application for a production-minded studio that will create 2–15 minute, source-backed wildlife documentaries. It now carries projects from sourced research through visual generation, voice alignment, deterministic timeline planning, subtitles and voice-first audio mixing using either manual editors or a resumable one-click workflow, with optional expensive generation on a separate worker host.
+Phase 12 application for creating 2–15 minute, source-backed wildlife documentaries. It carries projects from research through visual generation, voice alignment, timeline planning, audio mixing and a validated final MP4 export, using manual editors or a resumable one-click workflow with optional generation on a separate worker host.
 
 ## Architecture
 
@@ -334,6 +334,30 @@ Keep `GENERATION_EXECUTION_MODE=local` for the original in-process development b
 
 All worker API routes require `Authorization: Bearer <WORKER_AUTH_TOKEN>`.
 
+## Phase 12 scope
+
+- Actionable preflight checks for voice, timeline coverage, visuals, subtitles, audio, managed files, media tools and disk space
+- Background staged FFmpeg rendering, H.264/AAC encoding and atomic final-file publication
+- FFprobe validation for duration, video/audio streams, selected resolution and aspect ratio
+- Durable render history with progress, bounded logs, cancel, retry, stale-process recovery and temp cleanup
+- Export settings and UI for FPS, CRF, preset, subtitles, audio, preview and MP4 download
+- Project duplication, safe storage cleanup, storage reporting, missing-file detection and selected-asset proxies
+- Mock-provider end-to-end flow and real tiny-sample FFmpeg export tests without paid AI/GPU calls
+
+See [`docs/production.md`](docs/production.md) for deployment, queue, storage, backup and logging guidance.
+
+### Export and production API
+
+- `GET /api/projects/{project_id}/export`
+- `POST /api/projects/{project_id}/export/preflight`
+- `POST /api/projects/{project_id}/export/render`
+- `POST /api/render-jobs/{job_id}/cancel`
+- `POST /api/render-jobs/{job_id}/retry`
+- `GET /api/render-jobs/{job_id}/download`
+- `POST /api/projects/{project_id}/duplicate`
+- `GET /api/projects/{project_id}/storage`
+- `POST /api/projects/{project_id}/media/maintenance`
+
 ## Known limitations
 
-Authentication for end users, real web retrieval/LLM/stock/image/video/transcription credentials and final polished rendering belong to later roadmap phases and are not implemented yet. Phase 11's queue is database-backed and artifact transport is authenticated HTTP; production scale should use a dedicated broker plus short-lived object-storage URLs. Local workflow tasks still use FastAPI in-process background tasks. Workflow state survives restart and can resume, but an interrupted local provider call does not continue mid-call. Phase 9 prepares subtitle and audio mix plans but does not export the final documentary MP4. Users must confirm that uploaded audio licenses permit the intended distribution. Space-delimited word counting and approximate alignment require specialized tokenization for languages such as Burmese. Mock image, video, worker and transcription providers are development substitutes, not production AI output.
+End-user authentication and real web retrieval/LLM/stock/image/video/transcription adapters are deployment-specific and are not included. Multi-node production should use PostgreSQL, a dedicated broker and short-lived object-storage URLs. Render jobs currently run in the backend background process; production should move the same durable contract to a CPU render worker. Interrupted FFmpeg encodes restart from the render step, while upstream work is preserved. Users must confirm media licenses. Burmese and other non-space-delimited languages need specialized tokenization/alignment. Mock providers exercise the full flow but are not production AI models.

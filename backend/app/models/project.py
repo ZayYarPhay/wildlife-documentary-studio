@@ -35,6 +35,8 @@ class ProjectStatus(str, enum.Enum):
     PIPELINE_PAUSED = "PIPELINE_PAUSED"
     VOICE_WAITING = "VOICE_WAITING"
     RENDER_READY = "RENDER_READY"
+    RENDERING = "RENDERING"
+    COMPLETED = "COMPLETED"
     FAILED = "FAILED"
 
 
@@ -60,6 +62,7 @@ class ProjectPhase(str, enum.Enum):
     AUDIO_REVIEW = "AUDIO_REVIEW"
     WORKFLOW = "WORKFLOW"
     RENDER_READY = "RENDER_READY"
+    EXPORT = "EXPORT"
 
 
 class Project(Base):

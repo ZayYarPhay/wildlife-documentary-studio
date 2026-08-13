@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     stock_max_download_bytes: int = 1_073_741_824
     image_generation_provider: str = "mock"
     image_generation_timeout_seconds: int = 120
+    image_generation_max_retries: int = 2
     public_media_base_url: str = "http://localhost:8000/media"
     video_generation_provider: str = "mock"
     video_generation_timeout_seconds: int = 180
@@ -38,6 +39,12 @@ class Settings(BaseSettings):
     worker_auth_token: str = "change-me-in-production"
     worker_lease_seconds: int = 300
     worker_result_max_bytes: int = 1_073_741_824
+    render_timeout_seconds: int = 7_200
+    render_max_retries: int = 2
+    render_min_free_bytes: int = 1_073_741_824
+    render_default_crf: int = 20
+    render_default_preset: str = "medium"
+    job_stale_seconds: int = 900
     cors_origins: list[str] = ["http://localhost:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

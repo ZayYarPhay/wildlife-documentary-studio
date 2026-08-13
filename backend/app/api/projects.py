@@ -1,15 +1,26 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.project import Project
+from app.schemas.export import MediaMaintenanceReport, ProjectStorageReport
 from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+from app.services.production import (
+    delete_project_storage,
+    maintain_project_media,
+    project_storage_report,
+)
 
 router = APIRouter(prefix="/api/projects", tags=["projects"])
 DatabaseSession = Annotated[Session, Depends(get_db)]
+
+
+class MediaMaintenanceRequest(BaseModel):
+    cleanup_unused: bool = False
 
 
 def get_project_or_404(project_id: int, db: Session) -> Project:
@@ -52,9 +63,42 @@ def update_project(project_id: int, payload: ProjectUpdate, db: DatabaseSession)
     return project
 
 
+@router.post("/{project_id}/duplicate", response_model=ProjectRead, status_code=201)
+def duplicate_project(project_id: int, db: DatabaseSession) -> Project:
+    source = get_project_or_404(project_id, db)
+    duplicate = Project(
+        title=f"{source.title} (Copy)"[:200],
+        animal_topic=source.animal_topic,
+        auto_topic=source.auto_topic,
+        language=source.language,
+        requested_duration_seconds=source.requested_duration_seconds,
+        output_resolution=source.output_resolution,
+        documentary_tone=source.documentary_tone,
+    )
+    db.add(duplicate)
+    db.commit()
+    db.refresh(duplicate)
+    return duplicate
+
+
+@router.get("/{project_id}/storage", response_model=ProjectStorageReport)
+def get_project_storage(project_id: int, db: DatabaseSession) -> ProjectStorageReport:
+    get_project_or_404(project_id, db)
+    return project_storage_report(project_id, db)
+
+
+@router.post("/{project_id}/media/maintenance", response_model=MediaMaintenanceReport)
+def maintain_media(
+    project_id: int, payload: MediaMaintenanceRequest, db: DatabaseSession
+) -> MediaMaintenanceReport:
+    get_project_or_404(project_id, db)
+    return maintain_project_media(project_id, payload.cleanup_unused, db)
+
+
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(project_id: int, db: DatabaseSession) -> Response:
     project = get_project_or_404(project_id, db)
     db.delete(project)
     db.commit()
+    delete_project_storage(project_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

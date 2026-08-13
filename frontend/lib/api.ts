@@ -1,6 +1,7 @@
-import { AudioBundle, AudioSettings, DocumentaryScript, GenerationJob, ImageGenerationBundle, MediaAsset, Project, ProjectCreate, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
+import { AudioBundle, AudioSettings, DocumentaryScript, ExportBundle, ExportSettings, GenerationJob, ImageGenerationBundle, MediaAsset, PreflightReport, Project, ProjectCreate, ProjectStorageReport, RenderJob, ResearchBundle, ResearchFact, Scene, SceneBundle, ScenePrompt, SceneVoiceAlignment, ScriptBundle, ScriptSection, StockSearchBundle, Timeline, TimelineBundle, TimelineItem, TranscriptSegment, VideoGenerationBundle, VoiceBundle, WorkflowBundle, WorkflowMode, WorkflowPolicy, WorkflowRun } from "@/types/project";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+export const apiUrl = (path: string) => `${API_URL}${path}`;
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
@@ -23,6 +24,9 @@ export const api = {
   updateProject: (id: number, payload: Partial<ProjectCreate>) =>
     request<Project>(`/api/projects/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
   deleteProject: (id: number) => request<void>(`/api/projects/${id}`, { method: "DELETE" }),
+  duplicateProject: (id: number) => request<Project>(`/api/projects/${id}/duplicate`, {method:"POST"}),
+  getProjectStorage: (id: number) => request<ProjectStorageReport>(`/api/projects/${id}/storage`),
+  maintainProjectMedia: (id: number, cleanupUnused: boolean) => request<ProjectStorageReport & {removed_asset_ids:number[];removed_files:number;proxies_created:number}>(`/api/projects/${id}/media/maintenance`, {method:"POST",body:JSON.stringify({cleanup_unused:cleanupUnused})}),
   getResearch: (projectId: number) =>
     request<ResearchBundle>(`/api/projects/${projectId}/research`),
   generateResearch: (projectId: number) =>
@@ -64,6 +68,7 @@ export const api = {
   saveVideoPrompt: (sceneId: number, videoPrompt: string) => request<ScenePrompt>(`/api/scenes/${sceneId}/video-prompts`, {method:"POST",body:JSON.stringify({video_prompt:videoPrompt})}),
   generateVideo: (sceneId: number, payload: {prompt_id:number;source_asset_id:number;duration?:number;fps?:number}) => request<GenerationJob>(`/api/scenes/${sceneId}/videos/generate`, {method:"POST",body:JSON.stringify(payload)}),
   retryVideoJob: (jobId: number) => request<GenerationJob>(`/api/video-jobs/${jobId}/retry`, {method:"POST"}),
+  cancelVideoJob: (jobId: number) => request<GenerationJob>(`/api/video-jobs/${jobId}/cancel`, {method:"POST"}),
   chooseVideoFallback: (sceneId: number, strategy: "AI_IMAGE_MOTION"|"STOCK_VIDEO") => request<VideoGenerationBundle>(`/api/scenes/${sceneId}/video-fallback`, {method:"POST",body:JSON.stringify({strategy})}),
   getVoice: (projectId: number) => request<VoiceBundle>(`/api/projects/${projectId}/voice`),
   uploadVoice: async (projectId: number, file: File) => {
@@ -95,4 +100,9 @@ export const api = {
   resumeWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/resume`, {method:"POST"}),
   retryWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/retry`, {method:"POST"}),
   cancelWorkflow: (runId: number) => request<WorkflowRun>(`/api/workflows/${runId}/cancel`, {method:"POST"}),
+  getExport: (projectId: number) => request<ExportBundle>(`/api/projects/${projectId}/export`),
+  preflightExport: (projectId: number, settings: ExportSettings) => request<PreflightReport>(`/api/projects/${projectId}/export/preflight`, {method:"POST",body:JSON.stringify(settings)}),
+  startRender: (projectId: number, settings: ExportSettings) => request<RenderJob>(`/api/projects/${projectId}/export/render`, {method:"POST",body:JSON.stringify(settings)}),
+  cancelRender: (jobId: number) => request<RenderJob>(`/api/render-jobs/${jobId}/cancel`, {method:"POST"}),
+  retryRender: (jobId: number) => request<RenderJob>(`/api/render-jobs/${jobId}/retry`, {method:"POST"}),
 };

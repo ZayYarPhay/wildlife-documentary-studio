@@ -7,8 +7,8 @@ export type Project = {
   requested_duration_seconds: number;
   output_resolution: string;
   documentary_tone: string;
-  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "AUDIO_REVIEW" | "WORKFLOW_RUNNING" | "PIPELINE_PAUSED" | "VOICE_WAITING" | "RENDER_READY" | "FAILED";
-  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW" | "AUDIO" | "AUDIO_REVIEW" | "WORKFLOW" | "RENDER_READY";
+  status: "DRAFT" | "RESEARCHING" | "RESEARCH_REVIEW" | "SCRIPTING" | "SCRIPT_REVIEW" | "SCENE_PLANNING" | "SCENE_REVIEW" | "MEDIA_SEARCH" | "MEDIA_REVIEW" | "IMAGE_GENERATING" | "IMAGE_REVIEW" | "VIDEO_GENERATING" | "VIDEO_REVIEW" | "VOICE_TRANSCRIBING" | "VOICE_REVIEW" | "VOICE_APPLIED" | "TIMELINE_BUILDING" | "TIMELINE_REVIEW" | "AUDIO_REVIEW" | "WORKFLOW_RUNNING" | "PIPELINE_PAUSED" | "VOICE_WAITING" | "RENDER_READY" | "RENDERING" | "COMPLETED" | "FAILED";
+  current_phase: "FOUNDATION" | "RESEARCH" | "RESEARCH_REVIEW" | "SCRIPT" | "SCRIPT_REVIEW" | "SCENES" | "SCENE_REVIEW" | "MEDIA" | "MEDIA_REVIEW" | "IMAGES" | "IMAGE_REVIEW" | "VIDEOS" | "VIDEO_REVIEW" | "VOICE" | "VOICE_REVIEW" | "TIMELINE" | "TIMELINE_REVIEW" | "AUDIO" | "AUDIO_REVIEW" | "WORKFLOW" | "RENDER_READY" | "EXPORT";
   created_at: string;
   updated_at: string;
 };
@@ -358,6 +358,71 @@ export type WorkflowBundle = {
   project_id: number;
   current: WorkflowRun | null;
   runs: WorkflowRun[];
+};
+
+export type ExportSettings = {
+  fps: number;
+  crf: number;
+  preset: "ultrafast" | "veryfast" | "faster" | "fast" | "medium" | "slow";
+  subtitles_enabled: boolean;
+  audio_mix_enabled: boolean;
+};
+
+export type PreflightCheck = {
+  code: string;
+  label: string;
+  status: "PASS" | "WARNING" | "ERROR";
+  detail: string;
+};
+
+export type PreflightReport = {
+  project_id: number;
+  timeline_id: number | null;
+  ready: boolean;
+  checks: PreflightCheck[];
+  estimated_required_bytes: number;
+  free_bytes: number;
+};
+
+export type RenderJob = {
+  id: number;
+  project_id: number;
+  timeline_id: number | null;
+  status: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED";
+  progress: number;
+  retry_count: number;
+  cancel_requested: boolean;
+  settings_json: ExportSettings;
+  validation_json: Record<string, unknown>;
+  logs: string | null;
+  output_path: string | null;
+  duration: number | null;
+  width: number | null;
+  height: number | null;
+  fps: number | null;
+  file_size_bytes: number | null;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+};
+
+export type ExportBundle = {
+  project_id: number;
+  preflight: PreflightReport;
+  current: RenderJob | null;
+  jobs: RenderJob[];
+  download_url: string | null;
+};
+
+export type ProjectStorageReport = {
+  project_id: number;
+  usage_bytes: number;
+  file_count: number;
+  missing_asset_ids: number[];
+  generation_job_count: number;
+  render_job_count: number;
 };
 
 export type SceneBundle = {

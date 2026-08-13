@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.audio import router as audio_router
+from app.api.export import router as export_router
 from app.api.images import router as images_router
 from app.api.media import router as media_router
 from app.api.projects import router as projects_router
@@ -24,6 +25,8 @@ from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.db.session import Base, SessionLocal, engine
 from app.services.media_tools import media_tool_status
+from app.services.production import recover_stale_generation_jobs
+from app.services.rendering import recover_stale_render_jobs
 from app.services.workflow import recover_interrupted_workflows
 
 configure_logging()
@@ -34,6 +37,8 @@ async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
     with SessionLocal() as db:
         recover_interrupted_workflows(db)
+        recover_stale_generation_jobs(db)
+        recover_stale_render_jobs(db)
     yield
 
 
@@ -59,6 +64,7 @@ app.include_router(timelines_router)
 app.include_router(audio_router)
 app.include_router(workflow_router)
 app.include_router(worker_router)
+app.include_router(export_router)
 
 
 @app.exception_handler(RequestValidationError)

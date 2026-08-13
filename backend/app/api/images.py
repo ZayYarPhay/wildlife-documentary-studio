@@ -150,6 +150,8 @@ def retry_image_job(
         raise HTTPException(status_code=404, detail="Image generation job not found")
     if old_job.status not in {"FAILED", "CANCELED"}:
         raise HTTPException(status_code=409, detail="Only failed or canceled jobs can be retried")
+    if old_job.retry_count >= get_settings().image_generation_max_retries:
+        raise HTTPException(status_code=409, detail="Image retry limit reached")
     scene = scene_or_404(old_job.scene_id or 0, db)
     prompt = db.get(ScenePrompt, old_job.prompt_id)
     if prompt is None:

@@ -22,7 +22,7 @@ from app.services.video_generation import (
     run_video_job,
     submit_video_job,
 )
-from app.services.worker_queue import enqueue_generation_job, worker_mode_enabled
+from app.services.worker_queue import cancel_worker_job, enqueue_generation_job, worker_mode_enabled
 
 router = APIRouter(tags=["videos"])
 DatabaseSession = Annotated[Session, Depends(get_db)]
@@ -183,6 +183,20 @@ def retry_video_job(
         enqueue_generation_job(job, db)
     else:
         background_tasks.add_task(run_video_job, job.id)
+    return job
+
+
+@router.post("/api/video-jobs/{job_id}/cancel", response_model=GenerationJobRead)
+def cancel_video_job(job_id: int, db: DatabaseSession) -> GenerationJob:
+    job = db.get(GenerationJob, job_id)
+    if job is None or job.job_type != "AI_VIDEO":
+        raise HTTPException(status_code=404, detail="Video generation job not found")
+    if job.status not in {"PENDING", "RUNNING"}:
+        raise HTTPException(status_code=409, detail="Only pending or running jobs can be canceled")
+    job.status = "CANCELED"
+    cancel_worker_job(job.id, db)
+    db.commit()
+    db.refresh(job)
     return job
 
 
